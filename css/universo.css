@@ -62,7 +62,7 @@ html.is-intro .rail, html.is-intro .pager, html.is-intro .to-top, html.is-intro 
 .elf-holo__glow { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
   background: radial-gradient(ellipse 30% 40% at 50% 50%, rgba(140, 255, 90, .04), transparent 70%); }
 /* Sobre mim (telas grandes): a moldura do elfo fica centralizada na altura do painel de Competências Técnicas */
-@media (min-width: 1024px) { .elf-holo { align-self: center; } }
+@media (min-width: 1024px) { .elf-holo, #sobre .id-card { align-self: center; } }
 /* plataforma de luz sob os pés */
 .elf-holo__base { position: absolute; left: 50%; bottom: 7%; width: 46%; height: 26px; transform: translateX(-50%); border-radius: 50%; pointer-events: none;
   background: radial-gradient(ellipse at center, rgba(0, 242, 254, .45), rgba(0, 140, 255, .15) 55%, transparent 72%); box-shadow: 0 0 26px rgba(0, 242, 254, .35); }

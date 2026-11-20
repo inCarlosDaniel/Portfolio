@@ -206,6 +206,9 @@ class ProjectDossier {
     this._build();
     this._onResize = () => { cancelAnimationFrame(this._rz); this._rz = requestAnimationFrame(() => { if (this.isOpen) { this.layout(); this.onRelayout?.(); } }); };
     window.addEventListener('resize', this._onResize);
+    // celular: o conteúdo muda de altura (troca de projeto, mídia carregando) → ajusta o espaço da seção
+    this._ro = new ResizeObserver(() => { if (this.isOpen) this._fitSection(); });
+    this._ro.observe(this.grid);
   }
 
   /* ------------------------------------------------------------------ estrutura */
@@ -221,10 +224,10 @@ class ProjectDossier {
     const head = (this.head = el('header', 'pd-panel pd-head'));
     const kicker = el('div', 'pd-kicker');
     this.kProj = el('span', 'pd-kicker__num'); this.kOrbit = el('span', 'pd-kicker__orbit');
-    kicker.append(el('span', null, 'PROJETO'), this.kProj, el('span', 'pd-kicker__sep', '//'), el('span', null, 'ÓRBITA'), this.kOrbit);
+    kicker.append(el('span', null, 'PROJETO'), this.kProj, el('span', 'pd-kicker__sep', '/'), this.kOrbit);
     this.titleEl = el('h3', 'pd-title'); this.titleEl.id = 'pd-title';
     this.taglineEl = el('p', 'pd-tagline');
-    const actions = el('div', 'pd-actions');
+    const actions = (this.actions = el('div', 'pd-actions'));
     this.orbitsNav = el('nav', 'pd-orbits'); this.orbitsNav.setAttribute('aria-label', 'Projetos');
     this.planetList.forEach((p, i) => {
       const b = el('button', 'pd-orbit', pad(i + 1)); b.type = 'button'; b.dataset.planet = p.id;
@@ -290,7 +293,7 @@ class ProjectDossier {
     if (same) return;
     this._pause();
     const pr = project ?? { name: meta.name ?? '' };
-    this.kProj.textContent = pad(meta.index); this.kOrbit.textContent = `${meta.index} / ${meta.total}`;
+    this.kProj.textContent = pad(meta.index); this.kOrbit.textContent = pad(meta.total);
     this.titleEl.textContent = pr.name ?? '';
     this.taglineEl.textContent = pr.tagline || pr.subtitle || '';
     this.taglineEl.hidden = !this.taglineEl.textContent;
@@ -477,16 +480,30 @@ class ProjectDossier {
     const a = (head ?? s).getBoundingClientRect(), b = (cards ?? s).getBoundingClientRect();
     // no computador, deixa livre a coluna dos botões flutuantes
     const right = innerWidth >= 768 ? Math.min(a.right, document.documentElement.clientWidth - 78) : a.right;
-    Object.assign(this.root.style, {
-      left: `${a.left - sr.left}px`, width: `${Math.max(280, right - a.left)}px`,
-      // nunca mais alto que a tela (no celular, acima da navegação de seções)
-      top: `${a.top - sr.top}px`, height: `${Math.max(320, Math.min(b.bottom - a.top, innerHeight - (innerWidth < 768 ? 140 : 88)))}px`,
-    });
-    // a mídia cabe inteira na área visível do corpo (sem precisar rolar para ver o vídeo todo)
     const narrow = matchMedia('(max-width: 760px)').matches;
-    this.root.style.setProperty('--pd-media-max', `${Math.max(200, this.body.clientHeight - (narrow ? 140 : 112))}px`);
+    // no celular a navegação entre projetos sai do cabeçalho e ganha uma linha própria embaixo (largura total)
+    if (narrow && this.actions.parentNode !== this.top) this.top.append(this.actions);
+    else if (!narrow && this.actions.parentNode !== this.head) this.head.append(this.actions);
+    Object.assign(this.root.style, {
+      left: `${a.left - sr.left}px`, width: `${Math.max(280, right - a.left)}px`, top: `${a.top - sr.top}px`,
+      // computador: nunca mais alto que a tela (rolagem interna) · celular: cresce com o conteúdo e a página rola normalmente
+      height: narrow ? '' : `${Math.max(320, Math.min(b.bottom - a.top, innerHeight - 88))}px`,
+    });
+    // a mídia cabe inteira na área visível (sem precisar rolar para ver o vídeo todo)
+    this.root.style.setProperty('--pd-media-max', `${Math.max(200, narrow ? innerHeight * 0.42 : this.body.clientHeight - 112)}px`);
     this.scan.style.setProperty('--scan-h', `${this.scan.clientHeight}px`);
+    this._fitSection();
     this._hintUpdate();
+  }
+
+  /** Celular: a seção ganha espaço embaixo para o dossiê inteiro caber sem cobrir a seção seguinte. */
+  _fitSection() {
+    const s = this.section;
+    s.style.paddingBottom = '';
+    if (!this.isOpen && this.root.hidden) return;
+    if (!matchMedia('(max-width: 760px)').matches) return;
+    const need = this.root.offsetTop + this.root.offsetHeight + 32 - s.clientHeight;
+    if (need > 0) s.style.paddingBottom = `${parseFloat(getComputedStyle(s).paddingBottom) + need}px`;
   }
 
   /** Centro e tamanho (px de tela) que o planeta deve ocupar dentro da janela de varredura. */
@@ -508,6 +525,17 @@ class ProjectDossier {
     this.root.hidden = false;
     this.section.classList.add('has-dossier');
     this.layout();
+    // celular: leva a página até o topo do dossiê (o visitante costuma clicar nos cartões, lá embaixo)
+    if (!was && matchMedia('(max-width: 760px)').matches) {
+      const y = this.root.getBoundingClientRect().top;
+      if (y < 56 || y > innerHeight * 0.4) {
+        scrollTo({ top: scrollY + y - 76, behavior: this.reduced ? 'auto' : 'smooth' });
+        // terminada a rolagem, o planeta volta para dentro da janela de varredura
+        let t = 0;
+        const done = () => { clearTimeout(t); removeEventListener('scrollend', done); if (this.isOpen) this.onRelayout?.(); };
+        addEventListener('scrollend', done, { once: true }); t = setTimeout(done, 1200);
+      }
+    }
     this._tl?.kill();
     const cells = [...this.grid.children], heads = [this.head, this.scan];
     if (this.reduced) { gsap.set([...heads, ...cells], { clearProps: 'opacity,transform' }); this._hintUpdate(); return; }
@@ -527,7 +555,7 @@ class ProjectDossier {
     this._pause();
     this._tl?.kill();
     this.hint.classList.remove('is-on');
-    const done = () => { if (!this.isOpen) { this.root.hidden = true; this.section.classList.remove('has-dossier'); gsap.set([this.head, this.scan, ...this.grid.children], { clearProps: 'opacity,transform' }); } };
+    const done = () => { if (!this.isOpen) { this.root.hidden = true; this.section.classList.remove('has-dossier'); this.section.style.paddingBottom = ''; gsap.set([this.head, this.scan, ...this.grid.children], { clearProps: 'opacity,transform' }); } };
     if (this.reduced) { done(); return; }
     this.section.classList.remove('has-dossier');
     this._tl = gsap.timeline({ onComplete: done })
@@ -540,7 +568,8 @@ class ProjectDossier {
 
   dispose() {
     this._pause(); this._tl?.kill(); cancelAnimationFrame(this._rz);
-    window.removeEventListener('resize', this._onResize);
+    window.removeEventListener('resize', this._onResize); this._ro?.disconnect();
+    this.section.style.paddingBottom = '';
     this.root.remove(); this.section.classList.remove('has-dossier');
   }
 }

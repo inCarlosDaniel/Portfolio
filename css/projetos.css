@@ -416,6 +416,47 @@ html.a11y-contrast .ss-tag { background: rgba(0, 0, 0, .9); }
   .pd-viewer { width: min(100%, calc(42svh * var(--ar))); }
   .pd-link { flex-direction: column; align-items: stretch; }
   .pd-cta { justify-content: center; }
+
+  /* o dossiê cresce na própria página (sem caixa com rolagem interna) */
+  .pd-body { overflow: visible; margin: 0; padding: 0 0 8px; }
+  .pd-hint { display: none; }
+
+  /* topo: [título | planeta] · navegação entre projetos embaixo, em largura total */
+  .pd-top { display: grid; grid-template-columns: minmax(0, 1fr) 104px; grid-template-areas: 'head scan' 'act act'; gap: 10px; }
+  .pd-head { grid-area: head; gap: 4px; padding: 16px; justify-content: center; }
+  .pd-kicker { font-size: 10.5px; letter-spacing: .2em; }
+  .pd-title { margin: 2px 0 0; font-size: clamp(22px, 6.6vw, 28px); line-height: 1.12; }
+  .pd-tagline { font-size: 14px; line-height: 1.4; }
+  .pd-scan { grid-area: scan; min-height: 104px; border-radius: 12px; }
+  .pd-scan__label { display: none; }
+  .pd-scan__corner { width: 18px; height: 18px; }
+  .pd-top > .pd-actions { grid-area: act; margin: 0; display: grid; grid-template-columns: 36px minmax(0, 1fr) 36px 36px; gap: 6px; }
+  .pd-orbits { order: 0; width: auto; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; }
+  .pd-orbit { min-width: 0; height: 36px; padding: 0; font-size: 11px; }
+  .pd-orbit::after { bottom: 3px; width: 4px; height: 4px; margin-left: -2px; }
+  .pd-close { width: 36px; padding: 0; justify-content: center; margin: 0; }
+  .pd-actions > :nth-child(1) { order: 1; } .pd-orbits { order: 2; } .pd-actions > :nth-child(3) { order: 3; } .pd-close { order: 4; }
+
+  /* painéis mais enxutos */
+  .pd-panel { padding: 16px; border-radius: 12px; }
+  .pd-media { padding: 10px; gap: 10px; }
+  .pd-mbar { gap: 8px; }
+  .pd-tab { padding: 8px 14px; font-size: 12.5px; }
+  .pd-h { font-size: 16px; margin-bottom: 10px; }
+  .pd-p { font-size: 15px; line-height: 1.6; }
+  .pd-techs, .pd-col .pd-techs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .pd-techtile, .pd-col .pd-techtile { min-height: 42px; padding: 6px 8px; gap: 8px; }
+  .pd-techtile__name, .pd-col .pd-techtile__name { font-size: 13px; overflow-wrap: anywhere; }
+  .pd-feats { gap: 12px; }
+  .pd-feat { gap: 12px; font-size: 14.5px; }
+  .pd-feat__icon { width: 32px; height: 32px; }
+  .pd-link__btns { flex-direction: column; }
+}
+/* celular estreito: os 6 números de projeto ganham uma linha só para eles */
+@media (max-width: 379px) {
+  .pd-actions { grid-template-columns: 36px 36px minmax(0, 1fr) 36px; }
+  .pd-close { grid-column: 4; }
+  .pd-orbits { grid-column: 1 / -1; order: 5; }
 }
 
 /* ---------- acessibilidade e desempenho ---------- */

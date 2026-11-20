@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>CARLOS DANIEL // HUD-OS - Full Stack &amp; Cybersecurity Operative</title>
+
+  <!-- Fontes e ícones -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <meta name="theme-color" content="#050a18"/>
+  <meta name="description" content="Portfólio de Carlos Daniel — desenvolvedor Full Stack e Cybersecurity. Projetos em um universo 3D interativo."/>
+  <script src="js/inicio.js"></script>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/estiloso.css"/>
+  <link rel="stylesheet" href="css/interface.css"/>
+  <link rel="stylesheet" href="css/universo.css"/>
+  <link rel="stylesheet" href="css/projetos.css"/>
+
+  <!-- Bibliotecas: Three.js (3D) e GSAP (animações) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/",
+        "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.15.1/index.js",
+        "gsap/ScrollToPlugin": "https://cdn.jsdelivr.net/npm/gsap@3.15.1/ScrollToPlugin.js"
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden relative selection:bg-primary-container selection:text-on-primary">
+  <a class="skip-link" href="#inicio">Pular para o conteúdo</a>
+
+  <!-- O canvas do universo 3D é criado por js/universo.js -->
+  <!-- Moldura do HUD -->
+  <div class="page-layer fixed inset-0 pointer-events-none z-10 flex flex-col justify-between p-4 md:p-6">
+    <div class="flex justify-between items-start text-primary-container opacity-40 font-label-sm text-label-sm">
+      <div class="flex items-center space-x-2">
+        <span class="material-symbols-outlined text-sm">flight_takeoff</span>
+        <span>GRID: 71.94 // TACTICAL STAR-SECTOR 04</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span>DEFENSE PROTOCOL: HARDENED</span>
+        <span class="material-symbols-outlined text-sm">shield</span>
+      </div>
+    </div>
+    <div class="flex justify-between items-end text-primary-container opacity-40 font-label-sm text-label-sm">
+      <div class="flex items-center space-x-2">
+        <span class="inline-block w-2 h-2 bg-primary-container rounded-full animate-ping"></span>
+        <span>TELEMETRY: SYNCHRONIZED</span>
+      </div>
+      <div>COORD: 18.094 // HYPERDRIVE: CHARGED</div>
+    </div>
+  </div>
+
+  <!-- Cabeçalho e menu -->
+  <header id="site-header" class="page-layer fixed top-0 left-0 w-full z-50 flex items-center justify-between gap-3 px-4 sm:px-6 lg:px-12 py-3 bg-surface-container-lowest/80 backdrop-blur-md border-b border-outline-variant/40 shadow-[0_0_20px_-5px_rgba(0,242,254,0.35)]">
+    <div class="flex items-center space-x-4 min-w-0">
+      <a class="flex items-center space-x-3 group min-w-0" href="#inicio" aria-label="CARLOS_DANIEL // HUD-OS — voltar ao início">
+        <div class="w-8 h-8 shrink-0 rounded border border-primary-container/60 bg-surface-container-low flex items-center justify-center text-primary-container glow-cyan group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">radar</span>
+        </div>
+        <span class="text-label-lg font-label-lg tracking-widest text-primary-container font-bold truncate group-hover:drop-shadow-[0_0_8px_rgba(0,242,254,0.6)]">CARLOS_DANIEL<span class="hidden sm:inline"> // HUD-OS</span></span>
+      </a>
+      <div class="hidden xl:flex items-center space-x-2 px-2.5 py-0.5 rounded bg-primary-container/10 border border-primary-container/30 text-primary-container font-label-sm text-label-sm">
+        <span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+        <span>SYS_STATUS: ONLINE / HYPERDRIVE READY</span>
+      </div>
+    </div>
+    <!-- Navegação principal -->
+    <nav id="main-nav" aria-label="Principal" class="hidden md:flex items-center space-x-8 relative">
+      <a class="nav-link font-label-md text-label-md tracking-wider" data-nav="inicio" href="#inicio">INÍCIO</a>
+      <a class="nav-link font-label-md text-label-md tracking-wider" data-nav="projetos" href="#projetos">PROJETOS</a>
+      <a class="nav-link font-label-md text-label-md tracking-wider" data-nav="sobre" href="#sobre">SOBRE MIM</a>
+      <a class="nav-link font-label-md text-label-md tracking-wider" data-nav="curriculo" href="#curriculo">CURRÍCULO</a>
+      <a class="nav-link font-label-md text-label-md tracking-wider" data-nav="contato" href="#contato">CONTATO</a>
+      <span class="nav-glider" aria-hidden="true"></span>
+    </nav>
+    <div class="flex items-center space-x-3 shrink-0">
+      <div class="hidden lg:flex items-center space-x-2 text-on-surface-variant mr-1">
+        <span class="material-symbols-outlined text-base hover:text-primary-container cursor-pointer transition-colors" title="Terminal">terminal</span>
+        <span class="material-symbols-outlined text-base hover:text-primary-container cursor-pointer transition-colors" title="Shield Status">shield</span>
+      </div>
+      <a class="inline-flex items-center space-x-2 px-3 sm:px-4 py-1.5 rounded text-label-md font-label-md tracking-wider uppercase border border-primary-container text-primary-container bg-primary-container/10 hover:bg-primary-container hover:text-on-primary hover:shadow-[0_0_20px_rgba(0,242,254,0.5)] active:scale-95 transition-all duration-200" href="https://github.com/inCarlosDaniel" rel="noopener noreferrer" target="_blank" aria-label="GitHub (abre em nova aba)">
+        <span class="material-symbols-outlined text-base">code</span>
+        <span class="hidden min-[400px]:inline">GITHUB</span>
+      </a>
+      <button id="menu-btn" class="hud-icon-btn md:hidden" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menu">
+        <span class="material-symbols-outlined" data-menu-icon="" aria-hidden="true">menu</span>
+      </button>
+    </div>
+    <span class="nav-progress" aria-hidden="true"></span>
+
+    <!-- Menu do celular -->
+    <div id="mobile-menu" class="mobile-menu md:hidden" hidden>
+      <nav aria-label="Menu">
+        <a data-nav="inicio" href="#inicio"><span class="material-symbols-outlined" aria-hidden="true">home</span>INÍCIO</a>
+        <a data-nav="projetos" href="#projetos"><span class="material-symbols-outlined" aria-hidden="true">public</span>PROJETOS</a>
+        <a data-nav="sobre" href="#sobre"><span class="material-symbols-outlined" aria-hidden="true">badge</span>SOBRE MIM</a>
+        <a data-nav="curriculo" href="#curriculo"><span class="material-symbols-outlined" aria-hidden="true">workspace_premium</span>CURRÍCULO</a>
+        <a data-nav="contato" href="#contato"><span class="material-symbols-outlined" aria-hidden="true">cell_tower</span>CONTATO</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Conteúdo -->
+  <main class="page-layer relative z-20 pt-20">
+
+    <!-- ===== SEÇÃO 1: INÍCIO ===== -->
+    <section class="hero min-h-screen flex flex-col justify-center items-center px-6 lg:px-12 relative text-center pb-12" id="inicio">
+      <div class="hero-ship-slot" data-safe-ignore="" aria-hidden="true"></div>
+      <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 mb-6 rounded-lg bg-surface-container-lowest/80 border border-primary-container/40 text-primary-container font-label-sm text-label-sm tracking-widest glow-cyan">
+        <span class="material-symbols-outlined text-sm animate-radar">satellite_alt</span>
+        <span>WARP SECTOR 04 // FULL-STACK &amp; CYBERSECURITY OPERATIVE</span>
+      </div>
+      <h1 class="hero-title" data-hero-title="" data-no-reveal="">CARLOS DANIEL</h1>
+      <p class="hero-lede font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-9 leading-relaxed font-light">
+        Desenvolvedor Full Stack focado em arquiteturas escaláveis, experiências imersivas tridimensionais e segurança cibernética tática. Operando na fronteira entre interfaces futuristas e sistemas resilientes.
+      </p>
+      <div class="hero-actions flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-12">
+        <a class="w-full sm:w-auto inline-flex items-center justify-center space-x-3 px-8 py-3.5 rounded text-label-md font-label-md tracking-wider uppercase bg-primary-container/20 border border-primary-container text-primary-container hover:bg-primary-container hover:text-on-primary glow-cyan active:scale-95 transition-all duration-200 group" href="#projetos">
+          <span class="material-symbols-outlined text-lg group-hover:rotate-45 transition-transform">explore</span>
+          <span>Explorar Galáxia de Projetos</span>
+        </a>
+        <a class="w-full sm:w-auto inline-flex items-center justify-center space-x-3 px-8 py-3.5 rounded text-label-md font-label-md tracking-wider uppercase border border-secondary-container/50 bg-secondary-container/10 text-secondary hover:border-secondary hover:shadow-[0_0_20px_rgba(138,43,226,0.4)] active:scale-95 transition-all duration-200" href="#contato">
+          <span class="material-symbols-outlined text-lg">cell_tower</span>
+          <span>Abrir Terminal</span>
+        </a>
+      </div>
+      <div class="hero-cards grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-4xl w-full mb-10">
+        <div class="bg-surface-container-lowest/70 backdrop-blur-md p-4 rounded border border-outline-variant/30 text-left">
+          <div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">ARQUITETURA</div>
+          <div class="font-headline-sm text-headline-sm text-primary-container">FULL STACK</div>
+          <div class="font-label-sm text-label-sm text-on-surface/60 mt-1">Java 17 &amp; React / Next</div>
+        </div>
+        <div class="bg-surface-container-lowest/70 backdrop-blur-md p-4 rounded border border-outline-variant/30 text-left">
+          <div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">SPECIALTY</div>
+          <div class="font-headline-sm text-headline-sm text-secondary">CYBERSECURITY</div>
+          <div class="font-label-sm text-label-sm text-on-surface/60 mt-1">Pentest &amp; Hardening</div>
+        </div>
+        <div class="bg-surface-container-lowest/70 backdrop-blur-md p-4 rounded border border-outline-variant/30 text-left">
+          <div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">INTERACTIVE 3D</div>
+          <div class="font-headline-sm text-headline-sm text-primary-container">WEBGL / THREE.JS</div>
+          <div class="font-label-sm text-label-sm text-on-surface/60 mt-1">Imersão Gráfica &amp; Shaders</div>
+        </div>
+        <div class="bg-surface-container-lowest/70 backdrop-blur-md p-4 rounded border border-outline-variant/30 text-left">
+          <div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">ACADEMIC BASE</div>
+          <div class="font-headline-sm text-headline-sm text-tertiary">UDF &amp; ETB</div>
+          <div class="font-label-sm text-label-sm text-on-surface/60 mt-1">Ciência da Computação</div>
+        </div>
+      </div>
+      <a class="inline-flex flex-col items-center space-y-2 group text-on-surface-variant hover:text-primary-container transition-colors" href="#projetos">
+        <span class="font-label-sm text-label-sm tracking-widest text-primary-container animate-pulse">
+          INICIAR VIAGEM HIPERESPACIAL [ROLAR PARA BAIXO]
+        </span>
+        <div class="w-8 h-8 rounded-full border border-primary-container/40 flex items-center justify-center group-hover:border-primary-container group-hover:shadow-[0_0_10px_rgba(0,242,254,0.5)] transition-all">
+          <span class="material-symbols-outlined text-sm animate-bounce text-primary-container">keyboard_double_arrow_down</span>
+        </div>
+        <span class="font-label-sm text-label-sm text-on-surface/40">HYPER_DRIVE: 0.5 PAST LIGHTSPEED</span>
+      </a>
+    </section>
+
+    <!-- ===== SEÇÃO 2: PROJETOS ===== -->
+    <section class="min-h-screen pt-10 pb-16 md:pt-12 px-6 lg:px-12 max-w-7xl mx-auto" id="projetos">
+      <div class="projects-head flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-8 border-b border-outline-variant/40">
+        <div>
+          <div class="flex items-center space-x-2 text-primary-container font-label-sm text-[10px] uppercase tracking-widest mb-1">
+            <span class="material-symbols-outlined text-sm" aria-hidden="true">public</span>
+            <span>PORTFÓLIO // PROJETOS</span>
+          </div>
+          <h2 class="font-headline-lg text-2xl md:text-3xl leading-tight uppercase text-on-surface tracking-tight">
+            Projetos em Destaque
+          </h2>
+        </div>
+        <p class="font-body-md text-sm leading-relaxed text-on-surface-variant max-w-sm">
+          Explore os planetas para conhecer meus projetos, tecnologias e código-fonte.
+        </p>
+      </div>
+      <!-- Sistema solar 3D e cartões de órbita -->
+      <div class="orbital-hud" id="orbital-hud">
+        <div class="orbital-hud__frame">
+          <header class="orbital-hud__bar">
+            <div class="orbital-hud__id">
+              <span class="orbital-hud__sector">SECTOR 07 // ORBITAL HUD</span>
+              <span class="orbital-hud__sep" aria-hidden="true">|</span>
+              <span class="orbital-hud__sys">ASTROMETRIC MATRIX: V3.8</span>
+            </div>
+            <div class="orbital-hud__actions">
+              <span class="orbital-hud__hint"><span class="material-symbols-outlined" aria-hidden="true">touch_app</span>Clique em um planeta para ver o projeto</span>
+              <span class="orbital-hud__status">STATUS: ATIVO</span>
+            </div>
+          </header>
+          <div class="orbital-hud__stage-wrap">
+            <div class="orbital-hud__stage" data-hud-stage="" id="solar-system">
+              <p class="orbital-hud__boot">Aguardando coordenadas…</p>
+            </div>
+          </div>
+        </div>
+        <nav aria-label="Projetos" class="orbital-hud__cards">
+          <button aria-pressed="false" class="orbital-card" data-planet="golden-bronze" type="button"><span class="orbital-card__idx">ÓRBITA 1</span><span class="orbital-card__name" data-card-name="">Bicicletaria</span></button>
+          <button aria-pressed="false" class="orbital-card" data-planet="crystal-cyan" type="button"><span class="orbital-card__idx">ÓRBITA 2</span><span class="orbital-card__name" data-card-name="">Visual Anatomy 3D</span></button>
+          <button aria-pressed="false" class="orbital-card" data-planet="deep-ocean" type="button"><span class="orbital-card__idx">ÓRBITA 3</span><span class="orbital-card__name" data-card-name="">Gestão de Estoque</span></button>
+          <button aria-pressed="false" class="orbital-card" data-planet="emerald-green" type="button"><span class="orbital-card__idx">ÓRBITA 4</span><span class="orbital-card__name" data-card-name="">The Wicked World</span></button>
+          <button aria-pressed="false" class="orbital-card" data-planet="magma-volcanic" type="button"><span class="orbital-card__idx">ÓRBITA 5</span><span class="orbital-card__name" data-card-name="">Tá de Carro</span></button>
+          <button aria-pressed="false" class="orbital-card" data-planet="mystical-purple" type="button"><span class="orbital-card__idx">ÓRBITA 6</span><span class="orbital-card__name" data-card-name="">SkillShare</span></button>
+        </nav>
+      </div>
+    </section>
+
+    <!-- ===== SEÇÃO 3: SOBRE MIM ===== -->
+    <section class="min-h-screen py-24 px-6 lg:px-12 max-w-7xl mx-auto" id="sobre">
+      <div class="border-b border-outline-variant/40 pb-6 mb-12">
+        <div class="flex items-center space-x-2 text-primary-container font-label-sm text-label-sm uppercase tracking-widest mb-2">
+          <span class="material-symbols-outlined text-sm">badge</span>
+          <span>IDENTIFICAÇÃO DE OPERATIVO // FICHA TÉCNICA</span>
+        </div>
+        <h2 class="font-headline-lg text-headline-lg uppercase text-on-surface tracking-tight">
+          Sobre Mim<span class="type-cursor" aria-hidden="true">_</span>
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Foto e ficha -->
+        <div class="lg:col-span-5 bg-surface-container-lowest/80 backdrop-blur-xl border border-primary-container/30 rounded-lg p-6 relative overflow-hidden glow-cyan">
+          <div class="relative w-64 h-64 mx-auto my-6 flex items-center justify-center">
+            <div class="absolute inset-0 rounded-full border border-primary-container/30 border-dashed animate-orbit"></div>
+            <div class="absolute inset-4 rounded-full border border-secondary/30 border-dotted animate-orbit-rev"></div>
+            <div class="w-48 h-48 rounded-full overflow-hidden border-2 border-primary-container p-1 bg-surface-container-low shadow-[0_0_25px_rgba(0,242,254,0.4)]">
+              <img alt="Carlos Daniel Operative Avatar" class="w-full h-full object-cover rounded-full" data-alt="Intense high-tech portrait of software engineer Carlos Daniel in modern space flight command attire with subtle cybernetic neon reflections of cyan and violet across the face, looking confident against a starfleet holographic command console" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdW9HCFUmoFy-S-IOhP-wF-wOkTD8dnK5zsKmCNy282TuC7r8EC16p9jyYEfDgGcdSy4MywdGdI41WHetzJOJkdPvNu9SzIlId7GIU7AQIaiEqgxubi-fGkBxoj_w0k980lbmHLwK7mvuRwRKZqyR2wL5NO8SXqnu3z-yC7Pc5Nxz37SyUqfmtDTD5qxvY0Tau3W4L4EnAbl_FgZP4Anw4NW_4CZJNkiQwYjB1PsA"/>
+            </div>
+            <div class="absolute top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-surface-container-lowest border border-primary-container text-primary-container font-label-sm text-[10px]">
+              OPERATIVE // CD
+            </div>
+          </div>
+          <div class="space-y-3 font-label-sm text-label-sm border-t border-outline-variant/30 pt-4">
+            <div class="flex justify-between py-1 border-b border-outline-variant/10">
+              <span class="text-on-surface-variant">CALLSIGN:</span>
+              <span class="text-primary-container font-bold">CARLOS DANIEL</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-outline-variant/10">
+              <span class="text-on-surface-variant">FUNÇÃO:</span>
+              <span class="text-on-surface">Full Stack &amp; Offensive Security</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-outline-variant/10">
+              <span class="text-on-surface-variant">LOCALIZAÇÃO:</span>
+              <span class="text-on-surface">Brasília, DF — Brasil (Setor 061)</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-on-surface-variant">STATUS:</span>
+              <span class="text-primary-container flex items-center space-x-1 font-bold">
+                <span class="w-2 h-2 rounded-full bg-primary-container animate-ping"></span>
+                <span>DISPONÍVEL PARA DESAFIOS</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- Biografia -->
+        <div class="lg:col-span-7 bg-surface-container-lowest/80 backdrop-blur-xl border border-outline-variant/40 rounded-lg p-6 lg:p-8">
+          <div class="flex items-center space-x-2 text-primary-container font-label-sm text-label-sm mb-3">
+            <span class="material-symbols-outlined text-base">psychology</span>
+            <span>MINHA VISÃO E PROTOCOLOS</span>
+          </div>
+          <h3 class="font-headline-md text-headline-md text-on-surface mb-4">
+            Desenvolvimento, Inovação &amp; Defesa Cibernética
+          </h3>
+          <p class="font-body-md text-body-md text-on-surface-variant mb-4 leading-relaxed">
+            Minha trajetória é guiada pela curiosidade e pela paixão por tecnologia e livros. Desde pequeno, gosto de explorar minha criatividade por meio da criação de mods para Minecraft, desenvolvendo personagens e transformando minhas próprias ideias em realidade, seja por meio da tecnologia ou da criação de livros. Sempre busquei aprender sobre Java e outras linguagens, e estou sempre buscando aprender algo novo.
+          </p>
+          <p class="font-body-md text-body-md text-on-surface-variant mb-4 leading-relaxed">
+            Tenho conhecimentos em desenvolvimento web, criando interfaces modernas e responsivas com HTML, CSS, JavaScript e Bootstrap. Também venho explorando a modelagem e o desenvolvimento 3D, utilizando ferramentas como Blender, Blockbench e Unity para criar personagens, ambientes e experiências tridimensionais em meus projetos.
+          </p>
+          <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Além disso, venho me aprofundando na área de cibersegurança, estudando análise de vulnerabilidades, redes, pentest e boas práticas de proteção digital. Também utilizo Python, Java e C# no desenvolvimento de projetos e automação, explorando diferentes formas de resolver problemas através da programação. Tenho investido bastante em cursos, certificações e projetos práticos, o que me permitiu desenvolver uma base sólida em tecnologia, segurança da informação e inteligência artificial.
+          </p>
+        </div>
+        <!-- Elfo 3D (desenhado pelo universo 3D, atrás da moldura) -->
+        <div class="lg:col-span-5 elf-holo" aria-label="Modelo 3D do elfo">
+          <div class="elf-holo__ring elf-holo__ring--outer animate-orbit" aria-hidden="true"></div>
+          <div class="elf-holo__ring elf-holo__ring--inner animate-orbit-rev" aria-hidden="true"></div>
+          <div class="elf-holo__glow" aria-hidden="true"></div>
+          <div class="elf-holo__base" aria-hidden="true"></div>
+          <div class="elf-holo__stage" data-elf-anchor=""></div>
+          <div class="elf-holo__tag">ELFO // CD-9418</div>
+        </div>
+        <!-- Competências técnicas -->
+        <div class="lg:col-span-7 bg-surface-container-lowest/80 backdrop-blur-xl border border-outline-variant/40 rounded-lg p-6 lg:p-8">
+          <div class="flex items-center justify-between mb-6 pb-2 border-b border-outline-variant/30">
+            <div class="flex items-center space-x-2 text-primary-container font-label-sm text-label-sm uppercase">
+              <span class="material-symbols-outlined text-base">memory</span>
+              <span>COMPETÊNCIAS TÉCNICAS // TECH STACK HUD</span>
+            </div>
+            <span class="text-label-sm font-label-sm text-secondary">TIER 1 ARSENAL</span>
+          </div>
+          <div class="space-y-6">
+            <div>
+              <div class="flex items-center space-x-2 text-primary-container font-label-sm text-label-sm mb-2.5">
+                <span class="material-symbols-outlined text-sm">dns</span>
+                <span class="font-bold">DESENVOLVIMENTO BACK-END &amp; APIs</span>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Java 17</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Spring Boot</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Node.js</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Python</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Django</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">REST APIs</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">OAuth2</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">WebSocket STOMP</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Maven</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Flyway</span>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2 text-secondary font-label-sm text-label-sm mb-2.5">
+                <span class="material-symbols-outlined text-sm">view_in_ar</span>
+                <span class="font-bold">INTERFACE HOLOGRÁFICA &amp; EXPERIÊNCIA 3D</span>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">React</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">Three.js</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">WebGL</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">JavaScript ES6+</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">Tailwind CSS</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">HTML5 / Modern Canvas</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">Bootstrap</span>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2 text-tertiary-fixed-dim font-label-sm text-label-sm mb-2.5">
+                <span class="material-symbols-outlined text-sm">security</span>
+                <span class="font-bold">CIBERSEGURANÇA &amp; SEGURANÇA DE APLICAÇÕES</span>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Kali Linux</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Pentest &amp; Hardening</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Spring Security</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">BCrypt</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Cryptography</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Fernet</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Medusa</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">VirtualBox</span>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2 text-primary-container font-label-sm text-label-sm mb-2.5">
+                <span class="material-symbols-outlined text-sm">database</span>
+                <span class="font-bold">BANCO DE DADOS &amp; FERRAMENTAS DE DESENVOLVIMENTO</span>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">MySQL</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">MariaDB</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">SQLite</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Docker</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Git &amp; GitHub</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">JSON</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">IntelliJ IDEA</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Apache NetBeans</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Visual Studio Code</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-primary-container/30 text-on-surface font-label-sm text-label-sm hover:border-primary-container transition-colors">Google Colab</span>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2 text-secondary font-label-sm text-label-sm mb-2.5">
+                <span class="material-symbols-outlined text-sm">deployed_code</span>
+                <span class="font-bold">MODELAGEM 3D &amp; DESENVOLVIMENTO INTERATIVO</span>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">Blender</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">Blockbench</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">Unity</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">C#</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">Meshy</span>
+                <span class="px-3 py-1 rounded bg-surface-container border border-secondary/30 text-on-surface font-label-sm text-label-sm hover:border-secondary transition-colors">Tripo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SEÇÃO 4: CURRÍCULO ===== -->
+    <section class="min-h-screen py-24 px-6 lg:px-12 max-w-7xl mx-auto" id="curriculo">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-outline-variant/40 pb-6">
+        <div>
+          <div class="flex items-center space-x-2 text-primary-container font-label-sm text-label-sm uppercase tracking-widest mb-2">
+            <span class="material-symbols-outlined text-sm">history_edu</span>
+            <span>REGISTROS DE FORMAÇÃO &amp; CONQUISTAS CIBERNÉTICAS</span>
+          </div>
+          <h2 class="font-headline-lg text-headline-lg uppercase text-on-surface tracking-tight">
+            Currículo &amp; Certificações
+          </h2>
+        </div>
+        <a class="mt-4 md:mt-0 inline-flex items-center space-x-2 px-6 py-3 rounded text-label-md font-label-md tracking-wider uppercase bg-primary-container/20 border border-primary-container text-primary-container hover:bg-primary-container hover:text-on-primary glow-cyan transition-all" href="#contato">
+          <span class="material-symbols-outlined text-base">download</span>
+          <span>BAIXAR RELATÓRIO DE MISSÃO / CV</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+        <!-- Formação -->
+        <div class="bg-surface-container-lowest/80 backdrop-blur-xl border border-outline-variant/40 rounded-lg p-6 lg:p-8">
+          <div class="flex items-center space-x-2 text-primary-container font-label-sm text-label-sm uppercase mb-6 pb-2 border-b border-outline-variant/20">
+            <span class="material-symbols-outlined text-base">school</span>
+            <span>FORMAÇÃO ACADÊMICA &amp; TÉCNICA</span>
+          </div>
+          <div class="space-y-6">
+            <div class="relative pl-6 border-l-2 border-primary-container">
+              <span class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-primary-container"></span>
+              <div class="flex justify-between items-start mb-1">
+                <h4 class="font-headline-sm text-headline-sm text-on-surface">Ciência da Computação — Bacharelado</h4>
+                <span class="px-2 py-0.5 rounded bg-primary-container/10 text-primary-container font-label-sm text-label-sm border border-primary-container/30">2026 – 2029</span>
+              </div>
+              <div class="font-body-md text-body-md text-primary-container/80 mb-2">Centro Universitário do Distrito Federal (UDF)</div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">
+                Fundamentos computacionais avançados, estruturas de dados complexas, inteligência artificial, engenharia de software distribuída e análise matemática rigorosa.
+              </p>
+            </div>
+            <div class="relative pl-6 border-l-2 border-secondary">
+              <span class="absolute -left-[7px] top-1 w-3 h-3 rounded-full bg-secondary"></span>
+              <div class="flex justify-between items-start mb-1">
+                <h4 class="font-headline-sm text-headline-sm text-on-surface">Ciência da Computação / Técnico</h4>
+                <span class="px-2 py-0.5 rounded bg-secondary/10 text-secondary font-label-sm text-label-sm border border-secondary/30">2024 – 2026</span>
+              </div>
+              <div class="font-body-md text-body-md text-secondary/80 mb-2">Escola Técnica de Brasília (ETB)</div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">
+                Imersão prática em arquitetura de computadores, redes de comunicação, lógica de programação, desenvolvimento de software e aplicações web, estruturas de dados, bancos de dados relacionais, modelagem de sistemas e segurança da informação.
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Experiência -->
+        <div class="bg-surface-container-lowest/80 backdrop-blur-xl border border-outline-variant/40 rounded-lg p-6 lg:p-8">
+          <div class="flex items-center space-x-2 text-secondary font-label-sm text-label-sm uppercase mb-6 pb-2 border-b border-outline-variant/20">
+            <span class="material-symbols-outlined text-base">terminal</span>
+            <span>EXPERIÊNCIA PRÁTICA &amp; EXPERIÊNCIA TÉCNICA</span>
+          </div>
+          <div class="space-y-4">
+            <div class="bg-surface-container-low/70 p-4 rounded border border-outline-variant/30">
+              <div class="flex items-center justify-between mb-1">
+                <div class="font-headline-sm text-headline-sm text-on-surface">Desenvolvimento Full-Stack Escalável</div>
+                <span class="text-primary-container font-label-sm text-label-sm">TEAM PROJECT</span>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mt-2">
+                Construção de aplicações completas do banco de dados ao front-end reativo. Experiência na criação de APIs REST com Spring Boot, autenticação segura OAuth2/JWT e orquestração de microsserviços.
+              </p>
+            </div>
+            <div class="bg-surface-container-low/70 p-4 rounded border border-outline-variant/30">
+              <div class="flex items-center justify-between mb-1">
+                <div class="font-headline-sm text-headline-sm text-on-surface">Operações de Segurança Ofensiva &amp; Pentest</div>
+                <span class="text-secondary font-label-sm text-label-sm">PENTEST LAB</span>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mt-2">
+                Simulações controladas de vetores de ataque, análise de vulnerabilidades de rede, auditorias de segurança em código-fonte e mitigação ativa de falhas (OWASP Top 10).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Certificações -->
+      <div>
+        <div class="flex items-center justify-between mb-6 pb-2 border-b border-outline-variant/30">
+          <div class="flex items-center space-x-2 text-primary-container font-label-sm text-label-sm uppercase">
+            <span class="material-symbols-outlined text-base">military_tech</span>
+            <span>CERTIFICAÇÕES &amp; QUALIFICAÇÕES PROFISSIONAIS // 16 CREDENCIAIS VERIFICADAS</span>
+            <span class="staff-anchor" data-staff-anchor="" aria-hidden="true"></span>
+          </div>
+          <span class="text-label-sm font-label-sm text-primary-container">CRYPTO_SIGN: VALID</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-primary-container/30 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">verified_user</span>
+              <span class="text-label-sm font-label-sm text-primary-container">SEC-01</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Riachuelo Cibersegurança</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Defesa de perímetro e governança</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-secondary/30 hover:border-secondary transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-secondary">bug_report</span>
+              <span class="text-label-sm font-label-sm text-secondary">SEC-02</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-secondary transition-colors">Malware em Python</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Análise de código e detecção de ameaças</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">lock_open</span>
+              <span class="text-label-sm font-label-sm text-primary-container">SEC-03</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Brute Force com Medusa</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Testes de robustez de credenciais</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">wifi_tethering_off</span>
+              <span class="text-label-sm font-label-sm text-primary-container">SEC-04</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Man in the Middle (MitM)</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Interceptação e criptografia de pacotes</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">security</span>
+              <span class="text-label-sm font-label-sm text-primary-container">SEC-05</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Fundamentos de Pentest</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Metodologias e relatórios de vulnerabilidade</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">hub</span>
+              <span class="text-label-sm font-label-sm text-primary-container">NET-01</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Redes de Computadores</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Topologias TCP/IP, DNS e roteamento</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">terminal</span>
+              <span class="text-label-sm font-label-sm text-primary-container">OS-01</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Sistemas Operacionais Linux</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Gerenciamento de processos e Kernel</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">code</span>
+              <span class="text-label-sm font-label-sm text-primary-container">DEV-01</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Java 17 Orientado a Objetos</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Polimorfismo, Streams e Coleções</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">layers</span>
+              <span class="text-label-sm font-label-sm text-primary-container">DEV-02</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Spring Boot Microservices</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">APIs RESTful e persistência JPA/Hibernate</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">vpn_key</span>
+              <span class="text-label-sm font-label-sm text-primary-container">SEC-06</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Autenticação JWT &amp; OAuth2</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Gerenciamento seguro de sessões</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">database</span>
+              <span class="text-label-sm font-label-sm text-primary-container">DB-01</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Modelagem de Dados MySQL</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Queries otimizadas e integridade ACID</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">deployed_code</span>
+              <span class="text-label-sm font-label-sm text-primary-container">OPS-01</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Docker Containerization</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Isolamento e deploy de serviços</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">shield</span>
+              <span class="text-label-sm font-label-sm text-primary-container">SEC-07</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Segurança de Aplicações Web</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Defesa contra SQLi, XSS e CSRF</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">token</span>
+              <span class="text-label-sm font-label-sm text-primary-container">DEV-03</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">React SPA Architecture</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Hooks, estado global e reatividade</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">visibility</span>
+              <span class="text-label-sm font-label-sm text-primary-container">DEV-04</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Programação Gráfica WebGL</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Three.js e renderização volumétrica</div>
+          </div>
+          <div class="bg-surface-container-lowest/80 backdrop-blur-md p-4 rounded border border-outline-variant/40 hover:border-primary-container transition-all group">
+            <div class="flex justify-between items-start mb-2">
+              <span class="material-symbols-outlined text-primary-container">fingerprint</span>
+              <span class="text-label-sm font-label-sm text-primary-container">SEC-08</span>
+            </div>
+            <div class="font-label-lg font-label-lg text-on-surface font-semibold group-hover:text-primary-container transition-colors">Criptografia Aplicada</div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Chaves assimétricas, Hashing e TLS</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SEÇÃO 5: CONTATO ===== -->
+    <section class="min-h-screen py-24 px-6 lg:px-12 max-w-7xl mx-auto flex flex-col justify-center" id="contato">
+      <div class="border-b border-outline-variant/40 pb-6 mb-12">
+        <div class="flex items-center space-x-2 text-primary-container font-label-sm text-label-sm uppercase tracking-widest mb-2">
+          <span class="material-symbols-outlined text-sm">cell_tower</span>
+          <span>FREQUÊNCIA DE COMUNICAÇÃO // DIRECT CONNECTION</span>
+        </div>
+        <h2 class="font-headline-lg text-headline-lg uppercase text-on-surface tracking-tight">
+          TERMINAL DE COMUNICAÇÃO
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Canais diretos -->
+        <div class="lg:col-span-5 bg-surface-container-lowest/80 backdrop-blur-xl border border-primary-container/30 rounded-lg p-6 lg:p-8 space-y-6 glow-cyan">
+          <div>
+            <div class="font-label-sm text-label-sm text-primary-container uppercase tracking-wider mb-1">
+              CANAL DE TRANSMISSÃO DIRETA
+            </div>
+            <h3 class="font-headline-md text-headline-md text-on-surface">
+              Estabelecer Contato
+            </h3>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-2">
+              Seja para novas missões de desenvolvimento, projetos desafiadores ou auditorias de segurança, envie sua mensagem pela rede galáctica.
+            </p>
+          </div>
+          <div class="space-y-4 pt-2">
+            <a class="flex items-center space-x-4 p-3 rounded bg-surface-container border border-outline-variant/30 hover:border-primary-container group transition-all" href="mailto:carlos123danielsouza@gmail.com">
+              <div class="w-10 h-10 rounded bg-primary-container/10 border border-primary-container/40 flex items-center justify-center text-primary-container">
+                <span class="material-symbols-outlined text-lg">mail</span>
+              </div>
+              <div class="overflow-hidden">
+                <div class="font-label-sm text-label-sm text-on-surface-variant">E-MAIL OFICIAL</div>
+                <div class="font-label-md text-label-md text-on-surface group-hover:text-primary-container truncate transition-colors">
+                  carlos123danielsouza@gmail.com
+                </div>
+              </div>
+            </a>
+            <a class="flex items-center space-x-4 p-3 rounded bg-surface-container border border-outline-variant/30 hover:border-primary-container group transition-all" href="https://wa.me/5561993217098" rel="noopener noreferrer" target="_blank">
+              <div class="w-10 h-10 rounded bg-primary-container/10 border border-primary-container/40 flex items-center justify-center text-primary-container">
+                <span class="material-symbols-outlined text-lg">chat</span>
+              </div>
+              <div>
+                <div class="font-label-sm text-label-sm text-on-surface-variant">WHATSAPP / COMMS</div>
+                <div class="font-label-md text-label-md text-on-surface group-hover:text-primary-container transition-colors">
+                  +55 61 993217098
+                </div>
+              </div>
+            </a>
+            <a class="flex items-center space-x-4 p-3 rounded bg-surface-container border border-outline-variant/30 hover:border-secondary group transition-all" href="https://linkedin.com/in/incarlosdaniel" rel="noopener noreferrer" target="_blank">
+              <div class="w-10 h-10 rounded bg-secondary/10 border border-secondary/40 flex items-center justify-center text-secondary">
+                <span class="material-symbols-outlined text-lg">share</span>
+              </div>
+              <div>
+                <div class="font-label-sm text-label-sm text-on-surface-variant">LINKEDIN TÁTICO</div>
+                <div class="font-label-md text-label-md text-on-surface group-hover:text-secondary transition-colors">
+                  /in/incarlosdaniel/
+                </div>
+              </div>
+            </a>
+            <a class="flex items-center space-x-4 p-3 rounded bg-surface-container border border-outline-variant/30 hover:border-primary-container group transition-all" href="https://github.com/inCarlosDaniel" rel="noopener noreferrer" target="_blank">
+              <div class="w-10 h-10 rounded bg-primary-container/10 border border-primary-container/40 flex items-center justify-center text-primary-container">
+                <span class="material-symbols-outlined text-lg">code</span>
+              </div>
+              <div>
+                <div class="font-label-sm text-label-sm text-on-surface-variant">GITHUB REPOSITORY</div>
+                <div class="font-label-md text-label-md text-on-surface group-hover:text-primary-container transition-colors">
+                  /inCarlosDaniel
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <!-- Formulário -->
+        <div class="lg:col-span-7 bg-surface-container-lowest/80 backdrop-blur-xl border border-outline-variant/40 rounded-lg p-6 lg:p-8">
+          <div class="flex items-center justify-between pb-4 mb-6 border-b border-outline-variant/30">
+            <div class="flex items-center space-x-2 text-primary-container font-label-sm text-label-sm">
+              <span class="material-symbols-outlined text-base">satellite</span>
+              <span>CONSOLE DE ENVIO // FORMULÁRIO ENCRIPTADO</span>
+            </div>
+            <span class="text-label-sm font-label-sm text-on-surface-variant">TLS 1.3 ACTIVE</span>
+          </div>
+          <form class="space-y-5" id="contact-form">
+            <div>
+              <label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">
+                &gt; NOME DE IDENTIFICAÇÃO DO OPERADOR:
+              </label>
+              <input class="w-full bg-surface-container-low border border-outline-variant/50 rounded px-4 py-3 text-on-surface font-label-md text-label-md focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" placeholder="Ex: Galen Erso // Comandante" required="" type="text"/>
+            </div>
+            <div>
+              <label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">
+                &gt; FREQUÊNCIA DE RETORNO / E-MAIL:
+              </label>
+              <input class="w-full bg-surface-container-low border border-outline-variant/50 rounded px-4 py-3 text-on-surface font-label-md text-label-md focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" placeholder="operador@alianca.galactic" required="" type="email"/>
+            </div>
+            <div>
+              <label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">
+                &gt; TRANSMISSÃO CODIFICADA // MENSAGEM:
+              </label>
+              <textarea class="w-full bg-surface-container-low border border-outline-variant/50 rounded px-4 py-3 text-on-surface font-label-md text-label-md focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" placeholder="Insira os parâmetros da missão ou proposta de engenharia..." required="" rows="4"></textarea>
+            </div>
+            <button class="w-full inline-flex items-center justify-center space-x-3 px-8 py-4 rounded text-label-md font-label-md tracking-wider uppercase bg-primary-container text-on-primary hover:shadow-[0_0_25px_rgba(0,242,254,0.7)] active:scale-95 transition-all font-bold" id="submit-btn" type="submit">
+              <span class="material-symbols-outlined text-lg">send</span>
+              <span id="btn-text">ENVIAR TRANSMISSÃO ESTELAR</span>
+            </button>
+            <div class="hidden text-center p-3 rounded bg-primary-container/10 border border-primary-container/40 text-primary-container font-label-sm text-label-sm" id="form-feedback">
+              [ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="page-layer relative w-full border-t border-outline-variant/30 px-6 lg:px-12 py-6 flex flex-col md:flex-row justify-between items-center gap-4 bg-surface-container-lowest/90 backdrop-blur-lg z-30">
+    <div class="flex items-center space-x-3">
+      <span class="material-symbols-outlined text-primary-container text-sm">shield</span>
+      <span class="text-label-sm font-label-sm text-primary-container font-bold tracking-widest uppercase">
+        TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS
+      </span>
+    </div>
+    <div class="flex flex-wrap items-center gap-6">
+      <a class="text-on-surface-variant font-label-sm text-label-sm tracking-widest uppercase hover:text-primary-container hover:underline transition-colors" href="#inicio">
+        DATA_CORE
+      </a>
+      <a class="text-on-surface-variant font-label-sm text-label-sm tracking-widest uppercase hover:text-primary-container hover:underline transition-colors" href="#sobre">
+        SECURITY_SPECS
+      </a>
+      <a class="text-on-surface-variant font-label-sm text-label-sm tracking-widest uppercase hover:text-primary-container hover:underline transition-colors" href="#projetos">
+        ORBITAL_METRICS
+      </a>
+      <a class="text-on-surface-variant font-label-sm text-label-sm tracking-widest uppercase hover:text-primary-container hover:underline transition-colors" href="#contato">
+        ENCRYPTED_SIGNAL
+      </a>
+    </div>
+  </footer>
+
+  <!-- Scripts: principal.js carrega os demais -->
+  <script type="module" src="js/principal.js"></script>
+</body>
+</html>

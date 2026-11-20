@@ -1,0 +1,124 @@
+/** UNIVERSO — fundo 3D, introdução Big Bang (terminal e nome hacker), avisos dos modelos 3D. */
+
+/* ===== UNIVERSO 3D E INTRODUÇÃO ===== */
+
+html { scrollbar-gutter: stable; }
+body { background: #010207; }
+/* sem WebGL: um céu estático discreto, para o site nunca ficar "vazio" */
+html.no-3d body { background: radial-gradient(ellipse at 70% 10%, rgba(0, 80, 200, .18), transparent 60%), radial-gradient(ellipse at 10% 90%, rgba(90, 30, 160, .14), transparent 55%), #010207; }
+
+/* O canvas fica ATRÁS de todo o conteúdo: é o universo (céu, estrelas, naves, elfo, sistema solar) */
+#universe-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
+
+/* Durante a introdução só o universo aparece; depois a página surge suavemente */
+.page-layer { transition: opacity 1.2s ease; }
+html.is-intro .page-layer { opacity: 0 !important; pointer-events: none; }
+html.is-intro, html.is-intro body { overflow: hidden; }
+html.is-intro body { background: #000; }
+html.is-intro .rail, html.is-intro .pager, html.is-intro .to-top, html.is-intro .sector-toast { visibility: hidden; }
+
+/* Abertura hacker (fictícia): canvas por cima de tudo, abaixo do botão de pular */
+.hack-terminal { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 90; pointer-events: none; display: block; }
+.sr-only-intro { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+.universe-skip { position: fixed; right: max(20px, env(safe-area-inset-right)); bottom: max(20px, env(safe-area-inset-bottom)); z-index: 95; font: 500 11px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .12em;
+  color: #9fd0ea; background: rgba(4, 18, 36, .7); border: 1px solid rgba(0, 140, 255, .55); padding: 10px 14px; border-radius: 3px; cursor: pointer; }
+.universe-skip:hover { border-color: #35d6f5; box-shadow: 0 0 12px -2px rgba(53, 214, 245, .55); }
+.universe-skip:focus-visible, .model-slot__retry:focus-visible { outline: 2px solid #35d6f5; outline-offset: 2px; }
+
+.skip-link { position: fixed; left: 12px; top: -60px; z-index: 100; padding: 10px 14px; font: 500 12px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .1em;
+  color: #e0fdff; background: #06101f; border: 1px solid #00f2fe; border-radius: 3px; transition: top .2s; }
+.skip-link:focus { top: 12px; }
+
+/* ---------- INÍCIO: composição central ---------- */
+#inicio.hero { gap: 0; }
+#inicio .hero-lede { max-width: 44rem; }
+#inicio .hero-cards { max-width: 58rem; }
+/* CARLOS DANIEL — o mesmo nome que as partículas formam: ciano-azul controlado, leve profundidade, legível */
+.hero-title {
+  margin: 0 0 1.4rem; font-family: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif; font-weight: 700; text-transform: uppercase;
+  font-size: clamp(42px, 8.4vw, 118px); line-height: .98; letter-spacing: -0.035em; text-wrap: balance;
+  background: linear-gradient(180deg, #f2fbff 0%, #a9e4ff 34%, #2fb2ff 62%, #008cff 82%, #3a5bff 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 #0b4f9e) drop-shadow(0 2px 0 #08397a) drop-shadow(0 3px 0 #052454) drop-shadow(0 0 22px rgba(0, 140, 255, .42));
+}
+.hero-title__word { display: inline-block; white-space: nowrap; }
+.hero-ship-slot { display: none; }
+@media (max-width: 767px) { .hero-ship-slot { display: block; width: 100%; height: clamp(96px, 16vh, 150px); flex: none; } }
+.hero-title__ch { display: inline; }
+.hero-lede { text-wrap: pretty; }
+@media (max-width: 640px) {
+  .hero-title { letter-spacing: -0.03em; margin-bottom: 1.1rem; }
+  .hero-actions { width: 100%; }
+}
+
+/* Sobre mim: moldura holográfica do elfo 3D. */
+.elf-holo { position: relative; height: clamp(380px, 34vw, 480px); border-radius: 8px; overflow: hidden;
+  border: 1px solid rgba(0, 242, 254, .3); box-shadow: 0 0 22px -8px rgba(0, 242, 254, .45), inset 0 0 40px -18px rgba(0, 242, 254, .35); }
+.elf-holo__ring { position: absolute; left: 50%; top: 50%; border-radius: 50%; pointer-events: none; }
+.elf-holo__ring--outer { width: min(86%, 400px); aspect-ratio: 1; margin: calc(min(86%, 400px) / -2) 0 0 calc(min(86%, 400px) / -2); border: 1px dashed rgba(0, 242, 254, .3); }
+.elf-holo__ring--inner { width: min(68%, 316px); aspect-ratio: 1; margin: calc(min(68%, 316px) / -2) 0 0 calc(min(68%, 316px) / -2); border: 1px dotted rgba(170, 120, 255, .35); }
+/* brilho esverdeado do holograma (por cima do modelo, bem suave, em modo "screen") */
+.elf-holo__glow { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+  background: radial-gradient(ellipse 30% 40% at 50% 50%, rgba(140, 255, 90, .04), transparent 70%); }
+/* Sobre mim (telas grandes): a moldura do elfo fica centralizada na altura do painel de Competências Técnicas */
+@media (min-width: 1024px) { .elf-holo { align-self: center; } }
+/* plataforma de luz sob os pés */
+.elf-holo__base { position: absolute; left: 50%; bottom: 7%; width: 46%; height: 26px; transform: translateX(-50%); border-radius: 50%; pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(0, 242, 254, .45), rgba(0, 140, 255, .15) 55%, transparent 72%); box-shadow: 0 0 26px rgba(0, 242, 254, .35); }
+.elf-holo__stage { position: absolute; left: 0; right: 0; top: 13%; bottom: 7%; }
+.elf-holo__tag { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); padding: 3px 10px; white-space: nowrap;
+  font: 500 11px/1.4 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .12em; color: #00f2fe;
+  background: rgba(4, 14, 30, .85); border: 1px solid rgba(0, 242, 254, .7); border-radius: 3px; }
+
+.staff-anchor { display: inline-block; width: 40px; height: 84px; margin: -32px 0; flex: none; }
+
+/* Aviso discreto quando um GLB ainda não foi colocado em models/ */
+.model-slot { position: absolute; z-index: 4; right: 5%; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; max-width: 260px; text-align: left;
+  padding: 12px 14px; font-family: 'JetBrains Mono', ui-monospace, monospace; border: 1px dashed rgba(0, 140, 255, .5); border-radius: 4px;
+  background: rgba(4, 14, 30, .55); box-shadow: 0 0 18px -6px rgba(0, 140, 255, .5); }
+.model-slot[hidden] { display: none; }
+.model-slot__title { font-size: 11px; letter-spacing: .14em; color: #35d6f5; }
+.model-slot__msg { font-size: 10px; letter-spacing: .08em; color: #9fd0ea; }
+.model-slot__path { font-size: 10px; color: #6f8aa6; word-break: break-all; }
+.model-slot__retry { align-self: flex-start; font: inherit; font-size: 10px; letter-spacing: .1em; cursor: pointer; color: #cfe6f5; background: #0a1830; border: 1px solid #2a6f8f; padding: 6px 10px; border-radius: 3px; }
+.model-slot__retry:hover { border-color: #35d6f5; }
+
+/* Painéis se materializam ao chegar na seção (holograma: fade + leve deslocamento + brilho) */
+.reveal { opacity: 0; transform: translateY(18px); filter: brightness(1.6) saturate(.6); transition: opacity .75s ease, transform .75s cubic-bezier(.2, .8, .2, 1), filter .9s ease; transition-delay: var(--d, 0ms); }
+.reveal.is-in { opacity: 1; transform: none; filter: none; }
+
+/* Aviso de setor ao chegar de uma viagem */
+.sector-toast { position: fixed; top: 84px; left: 50%; transform: translate(-50%, -8px); z-index: 48; display: flex; align-items: center; gap: 12px; padding: 9px 16px;
+  font: 500 11px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .16em; color: #e0fdff; background: rgba(4, 18, 36, .82); backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 242, 254, .45); border-radius: 3px; box-shadow: 0 0 18px -4px rgba(0, 242, 254, .5); opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s; }
+.sector-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+.sector-toast__k { color: #00f2fe; }
+.sector-toast__k::after { content: ''; display: inline-block; width: 1px; height: 11px; margin-left: 12px; vertical-align: -2px; background: rgba(0, 242, 254, .5); }
+
+@media (max-width: 767px) { .model-slot { top: auto; bottom: 12px; right: 12px; transform: none; max-width: 200px; } .sector-toast { top: 72px; } }
+@media (prefers-reduced-motion: reduce) { .reveal { transition: none; opacity: 1; transform: none; filter: none; } .page-layer { transition: none; } }
+
+/* Nome hacker da introdução (js/universe/HackerName.js) — só existe durante a animação do Big Bang. */
+.hacker-name { position: fixed; left: 50%; top: 50%; z-index: 85; transform: translate(-50%, -50%); pointer-events: none; white-space: pre; opacity: 0;
+  font: 700 clamp(30px, 7vw, 104px)/1 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .02em; text-transform: uppercase; will-change: transform, opacity, filter; }
+.hacker-name__text { filter: drop-shadow(0 1px 0 #0b4f9e) drop-shadow(0 2px 0 #08397a) drop-shadow(0 0 22px rgba(0, 140, 255, .55)); }
+.hacker-name__ok { background: linear-gradient(180deg, #f2fbff 0%, #a9e4ff 34%, #2fb2ff 62%, #008cff 82%, #3a5bff 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.hacker-name__sym { color: #2fb2ff; opacity: .62; text-shadow: 0 0 10px rgba(47, 178, 255, .7); }
+.hacker-name__cursor { display: inline-block; color: #2fb2ff; text-shadow: 0 0 12px rgba(47, 178, 255, .9); animation: hacker-blink .75s step-start infinite; }
+@keyframes hacker-blink { 50% { opacity: 0; } }
+/* saída: falha rápida — faixas deslocadas e cores separadas */
+.hacker-name.is-glitch .hacker-name__text { animation: hacker-glitch .11s steps(2) infinite; }
+.hacker-name.is-glitch .hacker-name__cursor { opacity: 0; animation: none; }
+@keyframes hacker-glitch {
+  0% { clip-path: inset(0 0 58% 0); transform: translateX(-6px); text-shadow: 3px 0 #7a5cff, -3px 0 #19d4ff; }
+  50% { clip-path: inset(42% 0 0 0); transform: translateX(7px); text-shadow: -3px 0 #7a5cff, 3px 0 #19d4ff; }
+  100% { clip-path: inset(0 0 0 0); transform: none; }
+}
+@media (max-width: 640px) { .hacker-name { font-size: clamp(24px, 8.4vw, 40px); } }
+
+/* "Sobre Mim_": cursor piscando como se estivesse sendo digitado */
+.type-cursor { display: inline-block; margin-left: .04em; color: #00f2fe; text-shadow: 0 0 10px rgba(0, 242, 254, .6); animation: type-blink 1s step-end infinite; }
+@keyframes type-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .type-cursor { animation: none; } }

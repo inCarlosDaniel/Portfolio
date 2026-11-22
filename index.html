@@ -166,47 +166,53 @@
 
     <!-- ===== SEÇÃO 2: PROJETOS ===== -->
     <section class="min-h-screen pt-10 pb-16 md:pt-12 px-6 lg:px-12 max-w-7xl mx-auto" id="projetos">
-      <div class="projects-head flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-8 border-b border-outline-variant/40">
-        <div>
-          <div class="flex items-center space-x-2 text-primary-container font-label-sm text-[10px] uppercase tracking-widest mb-1">
-            <span class="material-symbols-outlined text-sm" aria-hidden="true">public</span>
-            <span>PORTFÓLIO // PROJETOS</span>
-          </div>
-          <h2 class="font-headline-lg text-2xl md:text-3xl leading-tight uppercase text-on-surface tracking-tight">
-            Projetos em Destaque
-          </h2>
-        </div>
-        <p class="font-body-md text-sm leading-relaxed text-on-surface-variant max-w-sm">
-          Explore os planetas para conhecer meus projetos, tecnologias e código-fonte.
-        </p>
-      </div>
-      <!-- Sistema solar 3D e cartões de órbita -->
+      <header class="solar-head">
+        <div class="solar-head__kicker"><span>// 02. PLANETARY_TELEMETRY</span><i aria-hidden="true"></i></div>
+        <h2 class="solar-head__title">Planetas Exploráveis</h2>
+        <p class="solar-head__lead">Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.</p>
+      </header>
+      <!-- Sistema solar 3D (js/sistema-solar.js) e cartões de órbita -->
       <div class="orbital-hud" id="orbital-hud">
-        <div class="orbital-hud__frame">
-          <header class="orbital-hud__bar">
-            <div class="orbital-hud__id">
-              <span class="orbital-hud__sector">SECTOR 07 // ORBITAL HUD</span>
-              <span class="orbital-hud__sep" aria-hidden="true">|</span>
-              <span class="orbital-hud__sys">ASTROMETRIC MATRIX: V3.8</span>
+        <div class="solar-frame">
+          <span class="solar-frame__corner solar-frame__corner--tl" aria-hidden="true"></span>
+          <span class="solar-frame__corner solar-frame__corner--tr" aria-hidden="true"></span>
+          <span class="solar-frame__corner solar-frame__corner--bl" aria-hidden="true"></span>
+          <span class="solar-frame__corner solar-frame__corner--br" aria-hidden="true"></span>
+          <div class="solar-bar">
+            <div class="solar-bar__id">
+              <span class="solar-bar__ping" aria-hidden="true"></span>
+              <span class="solar-bar__sector">SECTOR 07 // ORBITAL HUD</span>
+              <span class="solar-bar__sys">| ASTROMETRIC MATRIX: V3.8</span>
             </div>
-            <div class="orbital-hud__actions">
-              <span class="orbital-hud__hint"><span class="material-symbols-outlined" aria-hidden="true">touch_app</span>Clique em um planeta para ver o projeto</span>
-              <span class="orbital-hud__status">STATUS: ATIVO</span>
-            </div>
-          </header>
-          <div class="orbital-hud__stage-wrap">
-            <div class="orbital-hud__stage" data-hud-stage="" id="solar-system">
-              <p class="orbital-hud__boot">Aguardando coordenadas…</p>
+            <div class="solar-bar__actions">
+              <button class="solar-bar__btn" type="button" data-hud-overview="" hidden><span aria-hidden="true">←</span> Visão geral</button>
+              <span class="solar-bar__status">STATUS: ATIVO</span>
             </div>
           </div>
+          <div class="solar-stage" data-hud-stage="" id="solar-system" aria-label="Sistema solar 3D: clique em um planeta para ver o projeto"></div>
+          <div class="solar-tip" data-solar-tip="" aria-hidden="true">
+            <span class="solar-tip__title" data-tip-title="">CORPO CELESTE</span>
+            <span class="solar-tip__sub">CLIQUE PARA TELEMETRIA</span>
+          </div>
+          <div class="solar-scanlines" aria-hidden="true"></div>
+          <p class="solar-hint"><span class="material-symbols-outlined" aria-hidden="true">touch_app</span>Clique em um planeta para ver o projeto</p>
+          <aside class="solar-drawer" data-solar-drawer="" aria-labelledby="solar-drawer-title" hidden>
+            <div class="solar-drawer__head">
+              <span class="solar-drawer__dot" aria-hidden="true"></span>
+              <span class="solar-drawer__code" data-drawer-code="">PROJETO</span>
+              <button class="solar-drawer__close" type="button" data-drawer-close="" aria-label="Fechar projeto"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
+            </div>
+            <div class="solar-drawer__body" data-drawer-body=""></div>
+            <div class="solar-drawer__actions" data-drawer-actions=""></div>
+          </aside>
         </div>
-        <nav aria-label="Projetos" class="orbital-hud__cards">
-          <button aria-pressed="false" class="orbital-card" data-planet="golden-bronze" type="button"><span class="orbital-card__idx">PROJETO 1</span><span class="orbital-card__name" data-card-name="">Bicicletaria</span></button>
-          <button aria-pressed="false" class="orbital-card" data-planet="crystal-cyan" type="button"><span class="orbital-card__idx">PROJETO 2</span><span class="orbital-card__name" data-card-name="">Visual Anatomy 3D</span></button>
-          <button aria-pressed="false" class="orbital-card" data-planet="deep-ocean" type="button"><span class="orbital-card__idx">PROJETO 3</span><span class="orbital-card__name" data-card-name="">Gestão de Estoque</span></button>
-          <button aria-pressed="false" class="orbital-card" data-planet="emerald-green" type="button"><span class="orbital-card__idx">PROJETO 4</span><span class="orbital-card__name" data-card-name="">The Wicked World</span></button>
-          <button aria-pressed="false" class="orbital-card" data-planet="magma-volcanic" type="button"><span class="orbital-card__idx">PROJETO 5</span><span class="orbital-card__name" data-card-name="">Tá de Carro</span></button>
-          <button aria-pressed="false" class="orbital-card" data-planet="mystical-purple" type="button"><span class="orbital-card__idx">PROJETO 6</span><span class="orbital-card__name" data-card-name="">SkillShare</span></button>
+        <nav aria-label="Projetos" class="solar-pills">
+          <button aria-pressed="false" class="solar-pill" data-planet="golden-bronze" type="button"><span class="solar-pill__idx">PROJETO 1</span><span class="solar-pill__name" data-card-name="">Bicicletaria</span></button>
+          <button aria-pressed="false" class="solar-pill" data-planet="crystal-cyan" type="button"><span class="solar-pill__idx">PROJETO 2</span><span class="solar-pill__name" data-card-name="">Visual Anatomy 3D</span></button>
+          <button aria-pressed="false" class="solar-pill" data-planet="deep-ocean" type="button"><span class="solar-pill__idx">PROJETO 3</span><span class="solar-pill__name" data-card-name="">Gestão de Estoque</span></button>
+          <button aria-pressed="false" class="solar-pill" data-planet="emerald-green" type="button"><span class="solar-pill__idx">PROJETO 4</span><span class="solar-pill__name" data-card-name="">The Wicked World</span></button>
+          <button aria-pressed="false" class="solar-pill" data-planet="magma-volcanic" type="button"><span class="solar-pill__idx">PROJETO 5</span><span class="solar-pill__name" data-card-name="">Tá de Carro</span></button>
+          <button aria-pressed="false" class="solar-pill" data-planet="mystical-purple" type="button"><span class="solar-pill__idx">PROJETO 6</span><span class="solar-pill__name" data-card-name="">SkillShare</span></button>
         </nav>
       </div>
     </section>
@@ -464,7 +470,6 @@
           <div class="flex items-center space-x-2 text-primary-container font-label-sm text-label-sm uppercase">
             <span class="material-symbols-outlined text-base">military_tech</span>
             <span>CERTIFICAÇÕES &amp; QUALIFICAÇÕES PROFISSIONAIS // 16 CREDENCIAIS VERIFICADAS</span>
-            <span class="staff-anchor" data-staff-anchor="" aria-hidden="true"></span>
           </div>
           <span class="text-label-sm font-label-sm text-primary-container">CRYPTO_SIGN: VALID</span>
         </div>

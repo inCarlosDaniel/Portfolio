@@ -441,6 +441,11 @@ const dic_en = {
   "Banco local em SQLite e banco remoto em MySQL, modelado no MySQL Workbench.": "Local SQLite database and remote MySQL database, modeled in MySQL Workbench.",
   "Suporte a realidade virtual (VR) em planejamento.": "Virtual reality (VR) support planned.",
   "Clique em um planeta para ver o projeto": "Click a planet to view the project",
+  // ---- sistema solar (seção Projetos) ----
+  "Planetas Exploráveis": "Explorable Planets",
+  "Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.": "Each planet represents a mission from my development universe. Click a planet or use the cards below to explore technologies, code and demos.",
+  "Fechar projeto": "Close project",
+  "Sistema solar 3D: clique em um planeta para ver o projeto": "3D solar system: click a planet to view the project",
 };
 
 /* ===== DICIONÁRIO — ESPANHOL (es) ===== */
@@ -725,6 +730,11 @@ const dic_es = {
   "Banco local em SQLite e banco remoto em MySQL, modelado no MySQL Workbench.": "Base de datos local en SQLite y remota en MySQL, modelada en MySQL Workbench.",
   "Suporte a realidade virtual (VR) em planejamento.": "Soporte de realidad virtual (VR) en planificación.",
   "Clique em um planeta para ver o projeto": "Haz clic en un planeta para ver el proyecto",
+  // ---- sistema solar (seção Projetos) ----
+  "Planetas Exploráveis": "Planetas Explorables",
+  "Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.": "Cada planeta representa una misión de mi universo de desarrollo. Haz clic en un planeta o usa las tarjetas de abajo para explorar tecnologías, código y demostraciones.",
+  "Fechar projeto": "Cerrar proyecto",
+  "Sistema solar 3D: clique em um planeta para ver o projeto": "Sistema solar 3D: haz clic en un planeta para ver el proyecto",
 };
 
 /* ===== DICIONÁRIO — FRANCÊS (fr) ===== */
@@ -1009,6 +1019,11 @@ const dic_fr = {
   "Banco local em SQLite e banco remoto em MySQL, modelado no MySQL Workbench.": "Base de données locale SQLite et base distante MySQL, modélisée dans MySQL Workbench.",
   "Suporte a realidade virtual (VR) em planejamento.": "Prise en charge de la réalité virtuelle (VR) prévue.",
   "Clique em um planeta para ver o projeto": "Cliquez sur une planète pour voir le projet",
+  // ---- sistema solar (seção Projetos) ----
+  "Planetas Exploráveis": "Planètes à explorer",
+  "Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.": "Chaque planète représente une mission de mon univers de développement. Cliquez sur une planète ou utilisez les cartes ci-dessous pour explorer technologies, code et démonstrations.",
+  "Fechar projeto": "Fermer le projet",
+  "Sistema solar 3D: clique em um planeta para ver o projeto": "Système solaire 3D : cliquez sur une planète pour voir le projet",
 };
 
 /* ===== DICIONÁRIO — ALEMÃO (de) ===== */
@@ -1293,6 +1308,11 @@ const dic_de = {
   "Banco local em SQLite e banco remoto em MySQL, modelado no MySQL Workbench.": "Lokale SQLite-Datenbank und entfernte MySQL-Datenbank, modelliert in MySQL Workbench.",
   "Suporte a realidade virtual (VR) em planejamento.": "Unterstützung für virtuelle Realität (VR) in Planung.",
   "Clique em um planeta para ver o projeto": "Klicke auf einen Planeten, um das Projekt zu sehen",
+  // ---- sistema solar (seção Projetos) ----
+  "Planetas Exploráveis": "Erkundbare Planeten",
+  "Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.": "Jeder Planet steht für eine Mission aus meinem Entwicklungsuniversum. Klicke auf einen Planeten oder nutze die Karten unten, um Technologien, Code und Demos zu erkunden.",
+  "Fechar projeto": "Projekt schließen",
+  "Sistema solar 3D: clique em um planeta para ver o projeto": "3D-Sonnensystem: Klicke auf einen Planeten, um das Projekt zu sehen",
 };
 
 /* ===== DICIONÁRIO — ITALIANO (it) ===== */
@@ -1577,6 +1597,11 @@ const dic_it = {
   "Banco local em SQLite e banco remoto em MySQL, modelado no MySQL Workbench.": "Database locale in SQLite e remoto in MySQL, modellato in MySQL Workbench.",
   "Suporte a realidade virtual (VR) em planejamento.": "Supporto alla realtà virtuale (VR) in programma.",
   "Clique em um planeta para ver o projeto": "Clicca su un pianeta per vedere il progetto",
+  // ---- sistema solar (seção Projetos) ----
+  "Planetas Exploráveis": "Pianeti Esplorabili",
+  "Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.": "Ogni pianeta rappresenta una missione del mio universo di sviluppo. Fai clic su un pianeta o usa le schede qui sotto per esplorare tecnologie, codice e demo.",
+  "Fechar projeto": "Chiudi progetto",
+  "Sistema solar 3D: clique em um planeta para ver o projeto": "Sistema solare 3D: fai clic su un pianeta per vedere il progetto",
 };
 
 /* ===== DICIONÁRIO — JAPONÊS (ja) ===== */
@@ -1861,6 +1886,11 @@ const dic_ja = {
   "Banco local em SQLite e banco remoto em MySQL, modelado no MySQL Workbench.": "ローカルは SQLite、リモートは MySQL のデータベース（MySQL Workbench で設計）。",
   "Suporte a realidade virtual (VR) em planejamento.": "VR（仮想現実）対応を計画中。",
   "Clique em um planeta para ver o projeto": "惑星をクリックしてプロジェクトを表示",
+  // ---- sistema solar (seção Projetos) ----
+  "Planetas Exploráveis": "探索できる惑星",
+  "Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.": "それぞれの惑星は、私の開発ユニバースのミッションを表しています。惑星をクリックするか、下のカードから技術・コード・デモをご覧ください。",
+  "Fechar projeto": "プロジェクトを閉じる",
+  "Sistema solar 3D: clique em um planeta para ver o projeto": "3D太陽系：惑星をクリックしてプロジェクトを表示",
 };
 
 /* ===== DICIONÁRIO — CHINÊS (SIMPLIFICADO) (zh-CN) ===== */
@@ -2145,6 +2175,11 @@ const dic_zh_CN = {
   "Banco local em SQLite e banco remoto em MySQL, modelado no MySQL Workbench.": "本地 SQLite 数据库和远程 MySQL 数据库，使用 MySQL Workbench 建模。",
   "Suporte a realidade virtual (VR) em planejamento.": "计划支持虚拟现实（VR）。",
   "Clique em um planeta para ver o projeto": "点击行星查看项目",
+  // ---- sistema solar (seção Projetos) ----
+  "Planetas Exploráveis": "可探索的行星",
+  "Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.": "每颗行星都代表我开发宇宙中的一项任务。点击行星或使用下方卡片，探索技术、代码和演示。",
+  "Fechar projeto": "关闭项目",
+  "Sistema solar 3D: clique em um planeta para ver o projeto": "3D 太阳系：点击行星查看项目",
 };
 
 /* ===== DICIONÁRIO — COREANO (ko) ===== */
@@ -2429,6 +2464,11 @@ const dic_ko = {
   "Banco local em SQLite e banco remoto em MySQL, modelado no MySQL Workbench.": "로컬 SQLite와 원격 MySQL 데이터베이스(MySQL Workbench로 설계).",
   "Suporte a realidade virtual (VR) em planejamento.": "가상 현실(VR) 지원 계획 중.",
   "Clique em um planeta para ver o projeto": "행성을 클릭해 프로젝트 보기",
+  // ---- sistema solar (seção Projetos) ----
+  "Planetas Exploráveis": "탐험 가능한 행성",
+  "Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.": "각 행성은 나의 개발 우주 속 하나의 미션입니다. 행성을 클릭하거나 아래 카드를 사용해 기술, 코드, 데모를 살펴보세요.",
+  "Fechar projeto": "프로젝트 닫기",
+  "Sistema solar 3D: clique em um planeta para ver o projeto": "3D 태양계: 행성을 클릭해 프로젝트 보기",
 };
 
 /* ===== DICIONÁRIO — RUSSO (ru) ===== */
@@ -2713,6 +2753,11 @@ const dic_ru = {
   "Banco local em SQLite e banco remoto em MySQL, modelado no MySQL Workbench.": "Локальная база SQLite и удалённая MySQL, спроектированная в MySQL Workbench.",
   "Suporte a realidade virtual (VR) em planejamento.": "Планируется поддержка виртуальной реальности (VR).",
   "Clique em um planeta para ver o projeto": "Нажмите на планету, чтобы открыть проект",
+  // ---- sistema solar (seção Projetos) ----
+  "Planetas Exploráveis": "Планеты для исследования",
+  "Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.": "Каждая планета — это миссия из моей вселенной разработки. Нажмите на планету или используйте карточки ниже, чтобы изучить технологии, код и демо.",
+  "Fechar projeto": "Закрыть проект",
+  "Sistema solar 3D: clique em um planeta para ver o projeto": "3D Солнечная система: нажмите на планету, чтобы увидеть проект",
 };
 
 /* ===== DICIONÁRIO — ÁRABE (ar) ===== */
@@ -2997,6 +3042,11 @@ const dic_ar = {
   "Banco local em SQLite e banco remoto em MySQL, modelado no MySQL Workbench.": "قاعدة بيانات محلية SQLite وأخرى بعيدة MySQL، مُصمَّمة في MySQL Workbench.",
   "Suporte a realidade virtual (VR) em planejamento.": "دعم الواقع الافتراضي (VR) قيد التخطيط.",
   "Clique em um planeta para ver o projeto": "انقر على كوكب لعرض المشروع",
+  // ---- sistema solar (seção Projetos) ----
+  "Planetas Exploráveis": "كواكب قابلة للاستكشاف",
+  "Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.": "يمثل كل كوكب مهمة من عالمي في التطوير. انقر على كوكب أو استخدم البطاقات أدناه لاستكشاف التقنيات والشيفرة والعروض التوضيحية.",
+  "Fechar projeto": "إغلاق المشروع",
+  "Sistema solar 3D: clique em um planeta para ver o projeto": "نظام شمسي ثلاثي الأبعاد: انقر على كوكب لعرض المشروع",
 };
 
 /* ===== DICIONÁRIO — HINDI (hi) ===== */
@@ -3281,6 +3331,11 @@ const dic_hi = {
   "Banco local em SQLite e banco remoto em MySQL, modelado no MySQL Workbench.": "लोकल SQLite और रिमोट MySQL डेटाबेस, MySQL Workbench में मॉडल किया गया।",
   "Suporte a realidade virtual (VR) em planejamento.": "वर्चुअल रियलिटी (VR) सपोर्ट की योजना।",
   "Clique em um planeta para ver o projeto": "प्रोजेक्ट देखने के लिए किसी ग्रह पर क्लिक करें",
+  // ---- sistema solar (seção Projetos) ----
+  "Planetas Exploráveis": "खोजने योग्य ग्रह",
+  "Cada planeta representa uma missão do meu universo de desenvolvimento. Clique em um planeta ou use os cartões abaixo para explorar tecnologias, códigos e demonstrações.": "हर ग्रह मेरे डेवलपमेंट ब्रह्मांड के एक मिशन को दर्शाता है। तकनीकें, कोड और डेमो देखने के लिए किसी ग्रह पर क्लिक करें या नीचे दिए कार्ड का उपयोग करें।",
+  "Fechar projeto": "प्रोजेक्ट बंद करें",
+  "Sistema solar 3D: clique em um planeta para ver o projeto": "3D सौर मंडल: प्रोजेक्ट देखने के लिए किसी ग्रह पर क्लिक करें",
 };
 
 /** Código do idioma → dicionário (o português é o texto original, por isso não tem dicionário). */

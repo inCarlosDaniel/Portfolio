@@ -25,8 +25,6 @@ const models = {
   mainSpaceship: at('Main_Spaceship.glb'),
   secondarySpaceship: at('Secondary_Spaceship.glb'),
   elfCharacter: at('Elf_Character.glb'),
-  magicStaff: at('Magic_Staff.glb'),
-  solarSystem: at('Solar_System.glb'),
 };
 
 /** Nome da animação do elfo (precisa existir dentro do GLB). */
@@ -475,14 +473,11 @@ function initA11yCenter() {
 let LANGS = [], setLang = async () => {}, currentLang = () => 'pt-BR';
 let projects = {}, planetProjects = {};
 
-/** Carrega os outros 4 arquivos e liga tudo, na mesma ordem do site original. */
+/** Liga o site em duas etapas: primeiro o que é leve (idiomas, menu, formulário); depois o 3D. */
 async function iniciar() {
-  const [idiomas, projetos, sistemaSolar, universo3d] = await Promise.all([
-    import('./idiomas.js'),
-    import('./projetos.js'),
-    import('./sistema-solar.js'),
-    import('./universo.js'),
-  ]);
+  // o 3D começa a baixar já, em paralelo, mas não segura o resto da página
+  const pesado = Promise.all([import('./sistema-solar.js'), import('./universo.js')]);
+  const [idiomas, projetos] = await Promise.all([import('./idiomas.js'), import('./projetos.js')]);
   ({ LANGS, setLang, currentLang } = idiomas);
   ({ projects, planetProjects } = projetos);
 
@@ -491,6 +486,9 @@ async function iniciar() {
   initContactForm();      // seção Contato
   initNavigation();       // menu, seção atual, progresso, voltar ao início
   initReveal();           // painéis se materializam ao chegar
+
+  const [sistemaSolar, universo3d] = await pesado;
+  sistemaSolar.mountOrbitalHud(document.getElementById('orbital-hud')); // seção Projetos: sistema solar 3D
 
   // UM universo 3D para o site inteiro (fundo, Big Bang, título, naves, elfo
   let universe = null;
@@ -505,7 +503,6 @@ async function iniciar() {
     if (id) document.getElementById(id)?.scrollIntoView({ behavior: 'auto' });
     bus.emit('ready');
   }
-  sistemaSolar.mountOrbitalHud(document.getElementById('orbital-hud'), { universe }); // seção Projetos: sistema solar 3D
   universe?.start().catch((err) => {
     console.error('[universe] Falha na introdução.', err);
     document.documentElement.classList.remove('is-intro');

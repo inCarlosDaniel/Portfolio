@@ -3,7 +3,6 @@
  *   1. Ajustes do universo (edite aqui)
  *   2. Zonas seguras
  *   3. Aviso de modelo ausente
- *   4. Transição de cena
  *   5. Cosmos
  *   6. Planetas de fundo
  *   7. Terminal hacker
@@ -25,18 +24,16 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
-import { Pass, FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { site, sections, models, elfAnimation, bus, prefs, urlState } from './principal.js';
-import { loadGLB, probe, solarSystemConfig, getMaxOrbitRadius, overviewPose } from './sistema-solar.js';
+import { loadGLB, probe } from './sistema-solar.js';
 
 /* ===== 1. AJUSTES DO UNIVERSO ===== */
 
 const universe = {
   accent: 0x008cff, // azul holográfico (identidade visual)
 
-  /** Campo de visão da câmera (graus). Igual ao do sistema solar, para o enquadramento bater. */
+  /** Campo de visão da câmera (graus). */
   fov: 38,
 
   /** INTRODUÇÃO: tempos em segundos desde o início (limite de segurança: 17 s). */
@@ -92,7 +89,7 @@ const universe = {
   /** ESTAÇÕES — onde a câmera fica em cada seção. */
   stations: {
     inicio: { pos: [0, 0, 0], look: [0, 0.02, -1], palette: [0x0a3fb0, 0x0a8cff], glow: 1.0 },
-    projetos: { solarCenter: [150, -80, -1080], palette: [0x064a7a, 0x1a2a9c], glow: 0.8 },
+    projetos: { pos: [120, -40, -960], look: [0.18, -0.04, -1], palette: [0x064a7a, 0x1a2a9c], glow: 0.8 },
     sobre: { pos: [-170, 40, -1820], look: [-0.28, 0.06, -1], palette: [0x4a16a0, 0x123ea8], glow: 0.9 },
     curriculo: { pos: [-40, -50, -2560], look: [0.32, -0.05, -1], palette: [0x0b2c96, 0x3c1890], glow: 0.85 },
     contato: { pos: [150, 60, -3300], look: [0.12, 0.1, -1], palette: [0x5a1490, 0x0058c0], glow: 0.95 },
@@ -251,55 +248,6 @@ function createModelSlot({ title, path, parent }) {
     setProgress(p) { if (state === 'loading') msg.textContent = `${STRINGS.loading}… ${Math.round(p * 100)}%`; },
     dispose() { el.remove(); },
   };
-}
-
-/* ===== 4. TRANSIÇÃO DE CENA ===== */
-
-/** Desenha uma cena por cima da imagem com OPACIDADE (0…1) — usada pelo sistema solar da seção Projetos */
-class FadeScenePass extends Pass {
-  constructor(scene, camera) {
-    super();
-    this.scene = scene; this.camera = camera;
-    this.opacity = 1;
-    this.needsSwap = false;
-    this.rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType });
-    this.quad = new FullScreenQuad(new THREE.ShaderMaterial({
-      uniforms: { tScene: { value: null }, uOpacity: { value: 1 } },
-      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-      // cor * opacidade por cima do fundo, que só é coberto onde a cena é opaca (os brilhos aditivos apenas somam)
-      fragmentShader: 'uniform sampler2D tScene; uniform float uOpacity; varying vec2 vUv; void main(){ vec4 c = texture2D(tScene, vUv); gl_FragColor = vec4(c.rgb * uOpacity, clamp(c.a, 0.0, 1.0) * uOpacity); }',
-      transparent: true, depthTest: false, depthWrite: false,
-      blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor,
-      blendSrcAlpha: THREE.OneFactor, blendDstAlpha: THREE.OneMinusSrcAlphaFactor,
-    }));
-    this._clear = new THREE.Color(0, 0, 0);
-  }
-
-  setSize(w, h) { this.rt.setSize(w, h); }
-
-  render(renderer, writeBuffer, readBuffer) {
-    const op = this.opacity;
-    if (op <= 0.001) return;
-    const autoClear = renderer.autoClear;
-    renderer.autoClear = false;
-    if (op >= 0.999) {
-      renderer.setRenderTarget(this.renderToScreen ? null : readBuffer);
-      renderer.render(this.scene, this.camera);
-    } else {
-      const oldColor = renderer.getClearColor(new THREE.Color()), oldAlpha = renderer.getClearAlpha();
-      renderer.setRenderTarget(this.rt);
-      renderer.setClearColor(this._clear, 0); renderer.clear(true, true, false);
-      renderer.render(this.scene, this.camera);
-      renderer.setClearColor(oldColor, oldAlpha);
-      this.quad.material.uniforms.tScene.value = this.rt.texture;
-      this.quad.material.uniforms.uOpacity.value = op;
-      renderer.setRenderTarget(this.renderToScreen ? null : readBuffer);
-      this.quad.render(renderer);
-    }
-    renderer.autoClear = autoClear;
-  }
-
-  dispose() { this.rt.dispose(); this.quad.dispose(); this.quad.material.dispose(); }
 }
 
 /* ===== 5. COSMOS ===== */
@@ -624,7 +572,7 @@ class Cosmos {
       this.group.add(m); this.starMeshes[layer] = m;
     };
     const tint = () => (Math.random() < 0.7 ? Math.random() * 0.25 : Math.random());
-    // volume: caixa ao longo do caminho, sem estrelas dentro do sistema solar
+    // volume: caixa ao longo do caminho
     const B = W.bounds;
     make(0, q.volume, (p, d, i) => {
       for (let t = 0; t < 8; t++) {
@@ -1603,7 +1551,6 @@ class CameraDirector {
     this.cam = universe.camera;
     this.stops = [];
     this.s = 0; this.sSmooth = 0;
-    this.w = 0;                      // peso do sistema solar (0…1)
     this.state = 'reading';
     this.introOffset = new THREE.Vector3();
     this.path = { position: new THREE.Vector3(), quaternion: new THREE.Quaternion(), shiftX: 0, shiftY: 0 };
@@ -1612,7 +1559,6 @@ class CameraDirector {
     this.vel = new THREE.Vector3(); this.velView = new THREE.Vector3();
     this._prev = new THREE.Vector3(); this._first = true;
     this._q = new THREE.Quaternion(); this._tmp = new THREE.Vector3();
-    this.solar = null;               // sistema solar hospedado (quando carregado)
   }
 
   /** Posições de rolagem de cada estação: [{ y0, y1 }] (y0 chegada, y1 fim da leitura). */
@@ -1641,32 +1587,20 @@ class CameraDirector {
     const g = this.goal;
     g.position.copy(this.path.position); g.quaternion.copy(this.path.quaternion); g.shiftX = this.path.shiftX; g.shiftY = this.path.shiftY;
 
-    // mistura com a câmera do sistema solar perto da estação Projetos
-    const pi = u.world.index('projetos');
-    const wTarget = pi < 0 ? 0 : 1 - THREE.MathUtils.smoothstep(Math.abs(s - pi), 0.02, 0.55);
-    this.w = wTarget;
-    const sys = this.solar;
-    if (sys && this.w > 0) {
-      const px = sys.proxy;
-      g.position.lerp(px.position, this.w);
-      g.quaternion.slerp(px.quaternion, this.w);
-      g.shiftX += (sys.cameraCtrl.shift.x - g.shiftX) * this.w;
-      g.shiftY += (sys.cameraCtrl.shift.y - g.shiftY) * this.w;
-    }
     if (this.introOffset.lengthSq() > 0) g.position.add(this._tmp.copy(this.introOffset).applyQuaternion(g.quaternion)); // introdução: atrás do Início
 
     // estado (informativo + usado por outros módulos)
     const frac = Math.abs(s - Math.round(s));
-    this.state = u.intro?.active ? 'intro' : this.w > 0.98 ? 'projects' : frac < 1e-3 ? 'reading' : 'travel';
+    this.state = u.intro?.active ? 'intro' : frac < 1e-3 ? 'reading' : 'travel';
     this.station = Math.round(s);
 
-    // amortecimento: absorve saltos de rolagem; quase nenhum no sistema solar (o controle dele já suaviza)
+    // amortecimento: absorve saltos de rolagem
     const cam = this.cam;
     if (this._first || reduced) {
       cam.position.copy(g.position); cam.quaternion.copy(g.quaternion); this.shift.x = g.shiftX; this.shift.y = g.shiftY;
       this._first = false; this._jumped = true;
     } else {
-      const k = 1 - Math.exp(-dt * (u.intro?.active ? 30 : 6 + 24 * this.w * this.w));
+      const k = 1 - Math.exp(-dt * (u.intro?.active ? 30 : 6));
       cam.position.lerp(g.position, k);
       cam.quaternion.slerp(g.quaternion, k);
       this.shift.x += (g.shiftX - this.shift.x) * k; this.shift.y += (g.shiftY - this.shift.y) * k;
@@ -1703,33 +1637,24 @@ const UP = new THREE.Vector3(0, 1, 0);
 class World {
   constructor() {
     this.bang = V(U.bangOrigin);
-    this.solarCenter = V(U.stations.projetos?.solarCenter ?? [0, 0, -1000]);
-    this.solarRadius = getMaxOrbitRadius(solarSystemConfig);
     this.ids = sections.map((s) => s.id);
     this.poses = this.ids.map(() => ({ position: new THREE.Vector3(), quaternion: new THREE.Quaternion(), shiftX: 0, shiftY: 0 }));
     this.palettes = this.ids.map((id) => Object.assign([...(U.stations[id]?.palette ?? [0x0a3fb0, 0x0a8cff])], { glow: U.stations[id]?.glow ?? 1 }));
-    this.solarFrame = null;
-    this.layout(16 / 9, null);
+    this.layout();
     this._buildClusters();
     // volume das estrelas: envolve todas as estações com folga
     const box = new THREE.Box3();
     this.poses.forEach((p) => box.expandByPoint(p.position));
-    box.expandByPoint(this.bang).expandByPoint(this.solarCenter);
+    box.expandByPoint(this.bang);
     box.min.add(new THREE.Vector3(-900, -650, -1600)); box.max.add(new THREE.Vector3(900, 650, 500));
     this.bounds = box;
-    this.exclude = [{ center: this.solarCenter, radius: this.solarRadius * 2.2 }, ...this.poses.map((p) => ({ center: p.position, radius: 25 }))];
+    this.exclude = this.poses.map((p) => ({ center: p.position, radius: 25 }));
   }
 
-  /** Recalcula as poses (a da estação Projetos depende da proporção da tela e da área reservada ao sistema). */
-  layout(aspect, solarFrame) {
-    this.solarFrame = solarFrame;
+  /** Calcula a pose (posição + direção do olhar) de cada estação. */
+  layout() {
     this.ids.forEach((id, i) => {
       const cfg = U.stations[id] ?? {}, p = this.poses[i];
-      if (id === 'projetos') {
-        overviewPose(solarSystemConfig.camera, this.solarRadius, aspect, solarFrame, this.solarCenter, p);
-        p.shiftX = solarFrame?.shiftX ?? 0; p.shiftY = solarFrame?.shiftY ?? 0;
-        return;
-      }
       p.position.copy(V(cfg.pos ?? [0, 0, -i * 700]));
       const target = p.position.clone().add(V(cfg.look ?? [0, 0, -1]).normalize());
       p.quaternion.setFromRotationMatrix(new THREE.Matrix4().lookAt(p.position, target, UP));
@@ -1762,7 +1687,7 @@ class World {
       const p = this.poses[i], pal = this.palettes[i];
       const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(p.quaternion);
       const right = new THREE.Vector3(1, 0, 0).applyQuaternion(p.quaternion);
-      const far = id === 'projetos' ? this.solarCenter.clone().addScaledVector(fwd, 700) : p.position.clone().addScaledVector(fwd, 1100);
+      const far = p.position.clone().addScaledVector(fwd, 1100);
       out.push({ center: far.clone().addScaledVector(right, 260), palette: pal, glow: pal.glow, spread: 520, tilt: 0.35 });
       out.push({ center: far.clone().addScaledVector(right, -420).add(new THREE.Vector3(0, 220, -200)), palette: [pal[1], pal[0]], glow: pal.glow * 0.8, spread: 420, tilt: -0.5 });
       if (i < this.ids.length - 1) { // entre esta estação e a próxima, de lado (passa pela janela durante a viagem)
@@ -2192,9 +2117,10 @@ function initTravel({ seconds = 1.5, reduced = false, onChange } = {}) {
 
 /** Níveis de qualidade (o automático começa em "high" no desktop e "medium" no celular e desce se ficar lento). */
 const QUALITY = {
-  high: { px: 1.5, bloom: 0.5, aa: true, stars: U.stars.high, clouds: 26, bgScale: 0.5, skySize: 2048 },
-  medium: { px: 1.25, bloom: 0.4, aa: true, stars: U.stars.medium, clouds: 18, bgScale: 0.4, skySize: 2048 },
-  low: { px: 1, bloom: 0, aa: false, stars: U.stars.low, clouds: 10, bgScale: 0.33, skySize: 1024 },
+  // px = resolução máxima (× pixels da tela); bloom = escala da resolução do brilho (0 = desligado)
+  high: { px: 1.25, bloom: 0.4, stars: U.stars.high, clouds: 26, bgScale: 0.5, skySize: 2048 },
+  medium: { px: 1, bloom: 0.3, stars: U.stars.medium, clouds: 18, bgScale: 0.4, skySize: 2048 },
+  low: { px: 1, bloom: 0, stars: U.stars.low, clouds: 10, bgScale: 0.33, skySize: 1024 },
 };
 const LEVELS = ['high', 'medium', 'low'];
 
@@ -2207,10 +2133,11 @@ class Universe {
     this.rigDepth = 10;
     this.headerH = 72;
     this._frames = 0; this._acc = 0; this._dirty = true; this._lastMeasure = -10;
+    this._pending = 0; this._lastScrollAt = 0; this._warmup = 60; // quadros ignorados pela qualidade automática (carregamento)
     const coarse = matchMedia('(pointer: coarse)').matches || window.innerWidth < 720;
     const pref = prefs.get('quality');
     this.autoQuality = !pref || pref === 'auto';
-    this.level = this.autoQuality ? (coarse ? 'medium' : 'high') : pref;
+    this.level = this.autoQuality ? (coarse ? 'low' : (navigator.hardwareConcurrency || 8) <= 4 ? 'medium' : 'high') : pref;
     this.q = QUALITY[this.level] ?? QUALITY.medium;
     this.px = Math.min(window.devicePixelRatio || 1, this.q.px);
 
@@ -2222,7 +2149,7 @@ class Universe {
     this.renderer.setPixelRatio(this.px);
     this.renderer.setSize(window.innerWidth, window.innerHeight, false);
 
-    this.camera = new THREE.PerspectiveCamera(U.fov ?? solarSystemConfig.camera.fov, window.innerWidth / window.innerHeight, 0.1, 9000);
+    this.camera = new THREE.PerspectiveCamera(U.fov ?? 38, window.innerWidth / window.innerHeight, 0.1, 9000);
 
     // ---- cena principal ----
     this.scene = new THREE.Scene();
@@ -2233,10 +2160,6 @@ class Universe {
     const key = new THREE.DirectionalLight(0xdfeeff, 1.9); key.position.set(3, 4, 5); key.target.position.set(0, 0, 0);
     const rim = new THREE.PointLight(U.accent, 45, 0, 2); rim.position.set(-4, 1, 3);
     this.rig.add(key, key.target, rim);
-
-    // ---- cena do sistema solar (luzes próprias) ----
-    this.systemScene = new THREE.Scene();
-    this.systemScene.add(new THREE.AmbientLight(0x4a7bff, 0.3));
 
     // ---- mundo, céu, estrelas ----
     this.world = new World();
@@ -2249,13 +2172,10 @@ class Universe {
     this.title = new TitleParticles(this, prepareTitle(document.querySelector('[data-hero-title]')));
     this.intro = null;
     this.travel = initTravel({ seconds: U.travel.menuSeconds, reduced: this.reduced });
-    this.solar = null;
 
     this.anchored = [];
     const elfAnchor = document.querySelector('[data-elf-anchor]');
     if (elfAnchor) this.anchored.push(new AnchoredModel(this, { url: models.elfCharacter, anchor: elfAnchor, title: 'ELFO', animation: elfAnimation, height: 1, widthRatio: 1.5, maxPx: 400, yaw: -0.45, brightness: 0.55 }));
-    const staffAnchor = document.querySelector('[data-staff-anchor]');
-    if (staffAnchor) this.anchored.push(new AnchoredModel(this, { url: models.magicStaff, anchor: staffAnchor, title: 'CAJADO', optional: true, height: 0.95, yaw: 0.4 }));
 
     this._buildComposer();
     this.reduceFx = !!prefs.get('reduceEffects');
@@ -2272,17 +2192,10 @@ class Universe {
     const rt = new THREE.WebGLRenderTarget(w * this.px, h * this.px, { type: THREE.HalfFloatType });
     this.composer = new EffectComposer(this.renderer, rt);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
-    // sistema solar por cima, com opacidade (entra e sai em esmaecimento, sem "piscar" no meio da rolagem)
-    this.sysPass = new FadeScenePass(this.systemScene, this.camera);
-    this.composer.addPass(this.sysPass);
-    const b = solarSystemConfig.bloom;
-    this.bloom = new UnrealBloomPass(new THREE.Vector2(w, h), b.strength, b.radius, b.threshold);
+    this.bloom = new UnrealBloomPass(new THREE.Vector2(w, h), 0.85, 0.55, 0.85); // força, raio, limiar (só o muito brilhante brilha)
     this.bloom.enabled = this.q.bloom > 0;
     this.composer.addPass(this.bloom);
-    this.composer.addPass(new OutputPass());
-    this.smaa = new SMAAPass(w * this.px, h * this.px);
-    this.smaa.enabled = !!this.q.aa;
-    this.composer.addPass(this.smaa);
+    this.composer.addPass(new OutputPass()); // sem SMAA: o bloom já suaviza, e são 3 passes a menos por quadro
   }
 
   /** "Reduzir efeitos" (central de acessibilidade): sem bloom, planetas decorativos, rastros e brilho do título. */
@@ -2308,6 +2221,8 @@ class Universe {
     this._onCtxLost = (e) => { e.preventDefault(); this._fail(new Error('Contexto WebGL perdido')); };
     window.addEventListener('resize', this._onResize);
     window.addEventListener('pointermove', this._onMove, { passive: true });
+    this._onScroll = () => { this._lastScrollAt = performance.now(); };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
     document.addEventListener('visibilitychange', this._onVis);
     this.canvas.addEventListener('webglcontextlost', this._onCtxLost);
     document.fonts?.ready.then(() => this._measure());
@@ -2319,7 +2234,7 @@ class Universe {
     });
   }
 
-  /** Mede seções e conteúdo: estações da rolagem, zonas seguras e a área reservada ao sistema solar. */
+  /** Mede seções e conteúdo: estações da rolagem e zonas seguras. */
   _measure() {
     const H = window.innerHeight, W = window.innerWidth;
     this.headerH = document.getElementById('site-header')?.offsetHeight ?? 72;
@@ -2339,17 +2254,6 @@ class Universe {
     for (let i = 1; i < stops.length; i++) { stops[i].y0 = Math.max(stops[i].y0, stops[i - 1].y1); stops[i].y1 = Math.max(stops[i].y1, stops[i].y0); }
     this.director.setStops(stops);
 
-    // área do sistema solar (palco transparente da seção Projetos), na posição da estação
-    const stage = document.querySelector('[data-hud-stage]'), proj = document.getElementById('projetos');
-    if (stage && proj) {
-      const sr = stage.getBoundingClientRect(), pr = proj.getBoundingClientRect();
-      const i = this.sectionEls.indexOf(proj), top = pr.top + window.scrollY;
-      const y = sr.top - pr.top + (top - (stops[i]?.y0 ?? 0));
-      const cx = sr.left + sr.width / 2, cy = y + sr.height / 2;
-      this.solarFrame = { wFrac: clamp(sr.width / W, 0.2, 1), hFrac: clamp(sr.height / H, 0.2, 1), shiftX: -(cx - W / 2) / W, shiftY: -(cy - H / 2) / H };
-    }
-    this.world.layout(W / H, this.solarFrame);
-    this.solar?.cameraCtrl.setFrame(this.solarFrame);
     this.main?.layout();   // a nave primeiro: os corpos celestes tratam o espaço dela como ocupado
     this.planets.layout();
     this._lastMeasure = this.time;
@@ -2375,7 +2279,6 @@ class Universe {
     this.composer.setPixelRatio(this.px); this.composer.setSize(w, h);
     this.bloom.setSize(Math.max(1, Math.floor(w * this.px * (this.q.bloom || 0.5))), Math.max(1, Math.floor(h * this.px * (this.q.bloom || 0.5))));
     this.cosmos.resize(w, h, this.px);
-    this.solar?.cameraCtrl.setViewport(w, h);
     this.title.resize();
     this._measure();
   }
@@ -2385,23 +2288,20 @@ class Universe {
     this.level = name; this.q = q;
     this.px = Math.min(window.devicePixelRatio || 1, q.px);
     this.cosmos.setStarCount(q.stars); this.cosmos.setCloudCount(q.clouds); this.cosmos.setBackgroundScale(q.bgScale);
-    this.smaa.enabled = !!q.aa;
     this._applyFx();
     this._resize();
   }
 
-  /** API para o sistema solar viver dentro deste universo (js/sistema-solar.js → modo hospedado). */
-  hostForSolarSystem(stageEl) {
-    return {
-      scene: this.systemScene, camera: this.camera, canvas: this.canvas, eventTarget: stageEl, origin: this.world.solarCenter,
-      attach: (sys) => { this.solar = sys; this.director.solar = sys; sys.cameraCtrl.setViewport(window.innerWidth, window.innerHeight); sys.cameraCtrl.setFrame(this.solarFrame); this._stage = stageEl; },
-      detach: (sys) => { if (this.solar === sys) { this.solar = null; this.director.solar = null; } },
-    };
-  }
-
   _tick = (time, deltaMs) => {
     if (this._paused || this._dead) return;
-    try { this._step(deltaMs); } catch (err) { this._fail(err); }
+    this._govern(deltaMs / 1000);
+    // 60 fps só quando há movimento (introdução, viagem, rolagem recente); parado, 30 fps bastam e a GPU descansa
+    this._pending += deltaMs;
+    const busy = this.intro?.active || this.travel?.active || this.main?.state === 'arriving' || performance.now() - this._lastScrollAt < 1200;
+    const minMs = busy && this.level !== 'low' ? 0 : 1000 / 30 - 3;
+    if (this._pending < minMs) return;
+    const ms = this._pending; this._pending = 0;
+    try { this._step(ms); } catch (err) { this._fail(err); }
   };
 
   /** Se algo der errado no 3D, o site continua funcionando sem ele. */
@@ -2428,25 +2328,8 @@ class Universe {
     const scrolled = y !== this.scrollY;
     this.scrollY = y;
 
-    // sistema solar: só anima quando a câmera está perto dele (seção fora de vista = pausa)
-    const sys = this.solar, d = this.director;
-    const nearSolar = sys && this.camera.position.distanceTo(this.world.solarCenter) < 2200;
-    if (nearSolar) sys.step(dt);
-
+    const d = this.director;
     d.update(dt, y);
-    if (sys) {
-      const live = d.w > 0.9;
-      if (live !== this._live) { this._live = live; this._stage?.classList.toggle('is-live', live); document.getElementById('orbital-hud')?.classList.toggle('is-live', live); }
-      if (d.w < 0.02 && sys.interaction?.selected) { sys.reset(); sys.cameraCtrl.overview(true); } // saiu de Projetos: volta à visão geral
-      // aparece/some em esmaecimento ao chegar/sair de Projetos (de longe, no Início, ele não fica sobre o texto)
-      const ss = THREE.MathUtils.smoothstep;
-      const goal = nearSolar ? ss(d.s, 0.3, 0.72) * (1 - ss(d.s, 1.42, 1.8)) : 0;
-      // a rolagem anda em degraus (cada "clique" da roda): suaviza no tempo para nunca saltar
-      this._sysFade = this.reduced ? goal : (this._sysFade ?? goal) + (goal - (this._sysFade ?? goal)) * (1 - Math.exp(-dt * 5));
-      const fade = this._sysFade < 0.002 ? 0 : this._sysFade > 0.998 ? 1 : this._sysFade;
-      sys.group.visible = fade > 0;
-      if (this.sysPass) this.sysPass.opacity = fade;
-    }
 
     // rig da câmera: o plano z = 0 dele fica rigDepth à frente da câmera
     this.rig.quaternion.copy(this.camera.quaternion);
@@ -2465,23 +2348,25 @@ class Universe {
     const titleVisible = this.title.update(dt, { clock: this.intro ? this.intro.clock : null, homeVisible, time: this.time });
 
     // movimento reduzido: só redesenha quando algo muda
-    const animating = !this.reduced || this.intro?.active || this.main.state === 'arriving' || this.secondary.visible || nearSolar;
+    const animating = !this.reduced || this.intro?.active || this.main.state === 'arriving' || this.secondary.visible;
     if (!animating && !scrolled && !this._dirty) return;
     this._dirty = false;
 
     this.cosmos.renderBackground(this.renderer, this.camera);
     this.composer.render();
     if (titleVisible && (!this.reduceFx || this.intro?.active)) this.title.render(this.renderer);
-    this._govern(dt, planetsVisible || anchoredVisible);
   }
 
-  /** Qualidade automática: se os quadros ficarem lentos, desce um nível (resolução, bloom, estrelas, nebulosas). */
+  /** Qualidade automática: se os quadros ficarem lentos, desce um nível (resolução, bloom, estrelas, nebulosas).
+   *  Mede o intervalo real entre quadros do navegador (não o limite de 30 fps acima). */
   _govern(dt) {
-    if (!this.autoQuality || this.intro?.active) return;
+    if (!this.autoQuality) return;
+    if (this._warmup > 0) { this._warmup--; return; }
     this._acc += dt; this._frames++;
-    if (this._frames < 120) return;
+    if (this._frames < 40) return;
     const avg = this._acc / this._frames; this._frames = 0; this._acc = 0;
     if (avg <= 0.024) return;
+    this._warmup = 20; // a troca em si custa um quadro: não conta
     if (this.px > 1 && avg < 0.04) { this.px = Math.max(1, this.px - 0.25); this._resize(); return; }
     const i = LEVELS.indexOf(this.level);
     if (i < LEVELS.length - 1) this._setLevel(LEVELS[i + 1]);
@@ -2548,7 +2433,7 @@ class Universe {
 
   dispose() {
     gsap.ticker.remove(this._tick);
-    window.removeEventListener('resize', this._onResize); window.removeEventListener('pointermove', this._onMove);
+    window.removeEventListener('resize', this._onResize); window.removeEventListener('pointermove', this._onMove); window.removeEventListener('scroll', this._onScroll);
     document.removeEventListener('visibilitychange', this._onVis);
     this.canvas.removeEventListener('webglcontextlost', this._onCtxLost);
     this._prefOff?.();

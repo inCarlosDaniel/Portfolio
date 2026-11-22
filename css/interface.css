@@ -199,8 +199,6 @@ html.is-intro .a11y-fab { visibility: hidden; }
 
 /* tamanho do texto: amplia o conteúdo das seções (o cabeçalho e o universo 3D não mudam) */
 html.a11y-zoomed main { zoom: var(--a11y-zoom, 1); }
-/* a área do sistema solar não cresce com o texto (senão os cartões saem da tela) */
-html.a11y-zoomed .orbital-hud.is-hosted .orbital-hud__stage { height: clamp(240px, calc(100svh / var(--a11y-zoom, 1) - 300px), 980px); }
 
 /* alto contraste: textos claros, painéis quase opacos, bordas fortes, fundo 3D mais escuro */
 html.a11y-contrast #universe-canvas { filter: brightness(.55) saturate(.8); }
@@ -208,8 +206,6 @@ html.a11y-contrast main [class*="text-on-surface"], html.a11y-contrast main [cla
 html.a11y-contrast main [class*="bg-surface-container"] { background-color: rgba(0, 0, 0, .93) !important; }
 html.a11y-contrast main [class*="border-outline-variant"] { border-color: rgba(170, 225, 255, .6) !important; }
 html.a11y-contrast .page-layer.fixed .opacity-40 { opacity: .85 !important; }
-html.a11y-contrast .orbital-card, html.a11y-contrast .ss-panel, html.a11y-contrast .ssg-win { background: rgba(0, 0, 0, .94) !important; }
-html.a11y-contrast .ss-desc, html.a11y-contrast .ss-subtitle { color: #f4f9ff !important; }
 
 /* reduzir movimento: sem animações decorativas nem transições longas */
 html.a11y-reduce-motion *, html.a11y-reduce-motion *::before, html.a11y-reduce-motion *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
@@ -227,8 +223,8 @@ html.a11y-reduce-effects .animate-ping, html.a11y-reduce-effects .animate-bounce
 html.a11y-focus *:focus-visible { outline: 3px solid #ffd400 !important; outline-offset: 3px !important; box-shadow: 0 0 0 6px rgba(255, 212, 0, .25) !important; }
 
 /* alvos maiores (mínimo de 44 px para tocar/clicar) */
-html.a11y-targets :is(button, select, .orbital-card, #main-nav a, .mobile-menu a, main a[href]) { min-height: 44px; }
-html.a11y-targets :is(button, .orbital-card) { min-width: 44px; padding-top: 10px; padding-bottom: 10px; }
+html.a11y-targets :is(button, select, .solar-pill, #main-nav a, .mobile-menu a, main a[href]) { min-height: 44px; }
+html.a11y-targets :is(button, .solar-pill) { min-width: 44px; padding-top: 10px; padding-bottom: 10px; }
 html.a11y-targets main a[href] { display: inline-flex; align-items: center; }
 html.a11y-targets .rail a { width: 28px; height: 28px; }
 
@@ -263,12 +259,6 @@ img, video { max-width: 100%; }
   .hero-cards .text-headline-sm { font-size: 15px; line-height: 20px; overflow-wrap: anywhere; }
   @media (max-width: 360px) { .hero-cards .text-headline-sm { font-size: 13px; letter-spacing: -0.01em; } }
 
-  /* PROJETOS: barra do sistema solar */
-  .orbital-hud__actions { flex-shrink: 1; min-width: 0; width: 100%; flex-wrap: wrap; }
-  .orbital-hud__hint { display: block; flex: 1 1 auto; min-width: 0; white-space: normal !important; line-height: 1.4; }
-  .orbital-hud__hint .material-symbols-outlined { vertical-align: -4px; margin-right: 4px; }
-  .orbital-hud__status { display: none; }
-
   /* SOBRE: foto e ficha técnica */
   #sobre .w-64.h-64 { width: min(256px, 68vw); height: min(256px, 68vw); }
   #sobre .w-48.h-48 { width: 75%; height: 75%; }
@@ -293,4 +283,13 @@ img, video { max-width: 100%; }
   footer.page-layer > div:first-child { align-items: flex-start; }
   footer.page-layer span { line-height: 1.6; letter-spacing: .08em; }
   footer.page-layer .flex-wrap { justify-content: center; gap: 10px 20px; }
+}
+
+/* DESEMPENHO — celular, tablet e telas de toque: sem desfoque de fundo (backdrop-filter).
+   Atrás dos painéis há um canvas 3D que muda a cada quadro, então o navegador teria de
+   refazer o desfoque de cada painel visível em todo quadro. Um fundo mais opaco tem quase
+   o mesmo visual e custo zero. */
+@media (max-width: 1024px), (pointer: coarse) {
+  [class*="backdrop-blur"], .mobile-menu, .solar-bar { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  [class*="backdrop-blur"][class*="bg-surface-container-lowest"] { background-color: rgba(7, 13, 31, .92) !important; }
 }

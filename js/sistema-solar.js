@@ -316,8 +316,10 @@ function renderDrawer(drawer, planetId) {
     for (const m of p.media) {
       let node;
       if (isVideo(m)) {
-        node = el('video'); node.controls = true; node.playsInline = true; node.preload = 'none'; // só baixa ao dar play
-        node.src = encodeURI(m.src);
+        // 'metadata' + '#t=0.1': baixa só o início do vídeo e mostra o primeiro quadro como capa (sem tela preta)
+        node = el('video'); node.controls = true; node.playsInline = true; node.preload = 'metadata';
+        if (m.poster) node.poster = encodeURI(m.poster);
+        node.src = encodeURI(m.src) + '#t=0.1';
       } else {
         node = el('img'); node.loading = 'lazy'; node.decoding = 'async'; node.src = m.src.startsWith('http') ? m.src : encodeURI(m.src);
       }

@@ -319,7 +319,7 @@ const dic_en = {
   "> TRANSMISSÃO CODIFICADA // MENSAGEM:": "> ENCODED TRANSMISSION // MESSAGE:",
   "Ex: Galen Erso // Comandante": "E.g.: Galen Erso // Commander",
   "Insira os parâmetros da missão ou proposta de engenharia...": "Enter the mission parameters or engineering proposal...",
-  "ENVIAR TRANSMISSÃO ESTELAR": "SEND STELLAR TRANSMISSION",
+  "ENVIAR MENSAGEM": "SEND MESSAGE",
   "[ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]": "[ TRANSMISSION SENT SUCCESSFULLY THROUGH HYPERSPACE ]",
   "TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS": "ENCRYPTED TRANSMISSION // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - ALL RIGHTS RESERVED",
   "SETOR 01": "SECTOR 01",
@@ -476,6 +476,9 @@ const dic_en = {
   // ---- sistema solar (seção Projetos) ----
   "Fechar projeto": "Close project",
   "Sistema solar 3D: clique em um planeta para ver o projeto": "3D solar system: click a planet to view the project",
+  // ---- elfo 3D (Sobre mim) ----
+  "Modelo 3D · GLB": "3D Model · GLB",
+  "Personagem modelado, com rigging e animação no Blender. Arraste para girar.": "Character modeled, rigged and animated in Blender. Drag to rotate.",
 };
 
 /* ===== DICIONÁRIO — ESPANHOL (es) ===== */
@@ -638,7 +641,7 @@ const dic_es = {
   "> TRANSMISSÃO CODIFICADA // MENSAGEM:": "> TRANSMISIÓN CODIFICADA // MENSAJE:",
   "Ex: Galen Erso // Comandante": "Ej.: Galen Erso // Comandante",
   "Insira os parâmetros da missão ou proposta de engenharia...": "Introduce los parámetros de la misión o la propuesta de ingeniería...",
-  "ENVIAR TRANSMISSÃO ESTELAR": "ENVIAR TRANSMISIÓN ESTELAR",
+  "ENVIAR MENSAGEM": "ENVIAR MENSAJE",
   "[ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]": "[ TRANSMISIÓN ENVIADA CON ÉXITO POR EL HIPERESPACIO ]",
   "TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS": "TRANSMISIÓN CIFRADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS LOS DERECHOS RESERVADOS",
   "SETOR 01": "SECTOR 01",
@@ -795,6 +798,9 @@ const dic_es = {
   // ---- sistema solar (seção Projetos) ----
   "Fechar projeto": "Cerrar proyecto",
   "Sistema solar 3D: clique em um planeta para ver o projeto": "Sistema solar 3D: haz clic en un planeta para ver el proyecto",
+  // ---- elfo 3D (Sobre mim) ----
+  "Modelo 3D · GLB": "Modelo 3D · GLB",
+  "Personagem modelado, com rigging e animação no Blender. Arraste para girar.": "Personaje modelado, con rigging y animación en Blender. Arrastra para girar.",
 };
 
 /* ===== DICIONÁRIO — FRANCÊS (fr) ===== */
@@ -957,7 +963,7 @@ const dic_fr = {
   "> TRANSMISSÃO CODIFICADA // MENSAGEM:": "> TRANSMISSION CODÉE // MESSAGE :",
   "Ex: Galen Erso // Comandante": "Ex. : Galen Erso // Commandant",
   "Insira os parâmetros da missão ou proposta de engenharia...": "Saisissez les paramètres de la mission ou votre proposition technique...",
-  "ENVIAR TRANSMISSÃO ESTELAR": "ENVOYER LA TRANSMISSION STELLAIRE",
+  "ENVIAR MENSAGEM": "ENVOYER LE MESSAGE",
   "[ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]": "[ TRANSMISSION ENVOYÉE AVEC SUCCÈS VIA L'HYPERESPACE ]",
   "TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS": "TRANSMISSION CHIFFRÉE // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TOUS DROITS RÉSERVÉS",
   "SETOR 01": "SECTEUR 01",
@@ -1114,6 +1120,9 @@ const dic_fr = {
   // ---- sistema solar (seção Projetos) ----
   "Fechar projeto": "Fermer le projet",
   "Sistema solar 3D: clique em um planeta para ver o projeto": "Système solaire 3D : cliquez sur une planète pour voir le projet",
+  // ---- elfo 3D (Sobre mim) ----
+  "Modelo 3D · GLB": "Modèle 3D · GLB",
+  "Personagem modelado, com rigging e animação no Blender. Arraste para girar.": "Personnage modélisé, riggé et animé dans Blender. Faites glisser pour pivoter.",
 };
 
 /* ===== DICIONÁRIO — ALEMÃO (de) ===== */
@@ -1276,7 +1285,7 @@ const dic_de = {
   "> TRANSMISSÃO CODIFICADA // MENSAGEM:": "> CODIERTE ÜBERTRAGUNG // NACHRICHT:",
   "Ex: Galen Erso // Comandante": "Z. B.: Galen Erso // Kommandant",
   "Insira os parâmetros da missão ou proposta de engenharia...": "Missionsparameter oder technischen Vorschlag eingeben...",
-  "ENVIAR TRANSMISSÃO ESTELAR": "STELLARE ÜBERTRAGUNG SENDEN",
+  "ENVIAR MENSAGEM": "NACHRICHT SENDEN",
   "[ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]": "[ ÜBERTRAGUNG ERFOLGREICH DURCH DEN HYPERRAUM GESENDET ]",
   "TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS": "VERSCHLÜSSELTE ÜBERTRAGUNG // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - ALLE RECHTE VORBEHALTEN",
   "SETOR 01": "SEKTOR 01",
@@ -1433,6 +1442,9 @@ const dic_de = {
   // ---- sistema solar (seção Projetos) ----
   "Fechar projeto": "Projekt schließen",
   "Sistema solar 3D: clique em um planeta para ver o projeto": "3D-Sonnensystem: Klicke auf einen Planeten, um das Projekt zu sehen",
+  // ---- elfo 3D (Sobre mim) ----
+  "Modelo 3D · GLB": "3D-Modell · GLB",
+  "Personagem modelado, com rigging e animação no Blender. Arraste para girar.": "Figur in Blender modelliert, geriggt und animiert. Zum Drehen ziehen.",
 };
 
 /* ===== DICIONÁRIO — ITALIANO (it) ===== */
@@ -1595,7 +1607,7 @@ const dic_it = {
   "> TRANSMISSÃO CODIFICADA // MENSAGEM:": "> TRASMISSIONE CODIFICATA // MESSAGGIO:",
   "Ex: Galen Erso // Comandante": "Es.: Galen Erso // Comandante",
   "Insira os parâmetros da missão ou proposta de engenharia...": "Inserisci i parametri della missione o la proposta tecnica...",
-  "ENVIAR TRANSMISSÃO ESTELAR": "INVIA TRASMISSIONE STELLARE",
+  "ENVIAR MENSAGEM": "INVIA MESSAGGIO",
   "[ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]": "[ TRASMISSIONE INVIATA CON SUCCESSO ATTRAVERSO L'IPERSPAZIO ]",
   "TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS": "TRASMISSIONE CRITTOGRAFATA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TUTTI I DIRITTI RISERVATI",
   "SETOR 01": "SETTORE 01",
@@ -1752,6 +1764,9 @@ const dic_it = {
   // ---- sistema solar (seção Projetos) ----
   "Fechar projeto": "Chiudi progetto",
   "Sistema solar 3D: clique em um planeta para ver o projeto": "Sistema solare 3D: fai clic su un pianeta per vedere il progetto",
+  // ---- elfo 3D (Sobre mim) ----
+  "Modelo 3D · GLB": "Modello 3D · GLB",
+  "Personagem modelado, com rigging e animação no Blender. Arraste para girar.": "Personaggio modellato, con rigging e animazione in Blender. Trascina per ruotare.",
 };
 
 /* ===== DICIONÁRIO — JAPONÊS (ja) ===== */
@@ -1914,7 +1929,7 @@ const dic_ja = {
   "> TRANSMISSÃO CODIFICADA // MENSAGEM:": "> 暗号化送信 // メッセージ：",
   "Ex: Galen Erso // Comandante": "例：Galen Erso // 司令官",
   "Insira os parâmetros da missão ou proposta de engenharia...": "ミッションのパラメータまたはエンジニアリングの提案を入力...",
-  "ENVIAR TRANSMISSÃO ESTELAR": "星間通信を送信",
+  "ENVIAR MENSAGEM": "メッセージを送信",
   "[ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]": "[ ハイパースペース経由で送信完了 ]",
   "TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS": "暗号化通信 // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - ALL RIGHTS RESERVED",
   "SETOR 01": "セクター 01",
@@ -2071,6 +2086,9 @@ const dic_ja = {
   // ---- sistema solar (seção Projetos) ----
   "Fechar projeto": "プロジェクトを閉じる",
   "Sistema solar 3D: clique em um planeta para ver o projeto": "3D太陽系：惑星をクリックしてプロジェクトを表示",
+  // ---- elfo 3D (Sobre mim) ----
+  "Modelo 3D · GLB": "3Dモデル · GLB",
+  "Personagem modelado, com rigging e animação no Blender. Arraste para girar.": "Blenderでモデリング、リギング、アニメーションしたキャラクター。ドラッグで回転。",
 };
 
 /* ===== DICIONÁRIO — CHINÊS (SIMPLIFICADO) (zh-CN) ===== */
@@ -2233,7 +2251,7 @@ const dic_zh_CN = {
   "> TRANSMISSÃO CODIFICADA // MENSAGEM:": "> 编码传输 // 消息：",
   "Ex: Galen Erso // Comandante": "例如：Galen Erso // 指挥官",
   "Insira os parâmetros da missão ou proposta de engenharia...": "输入任务参数或工程提案……",
-  "ENVIAR TRANSMISSÃO ESTELAR": "发送星际传输",
+  "ENVIAR MENSAGEM": "发送消息",
   "[ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]": "[ 已通过超空间成功发送 ]",
   "TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS": "加密传输 // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - 保留所有权利",
   "SETOR 01": "扇区 01",
@@ -2390,6 +2408,9 @@ const dic_zh_CN = {
   // ---- sistema solar (seção Projetos) ----
   "Fechar projeto": "关闭项目",
   "Sistema solar 3D: clique em um planeta para ver o projeto": "3D 太阳系：点击行星查看项目",
+  // ---- elfo 3D (Sobre mim) ----
+  "Modelo 3D · GLB": "3D 模型 · GLB",
+  "Personagem modelado, com rigging e animação no Blender. Arraste para girar.": "在 Blender 中建模、绑定并制作动画的角色。拖动以旋转。",
 };
 
 /* ===== DICIONÁRIO — COREANO (ko) ===== */
@@ -2552,7 +2573,7 @@ const dic_ko = {
   "> TRANSMISSÃO CODIFICADA // MENSAGEM:": "> 암호화 전송 // 메시지:",
   "Ex: Galen Erso // Comandante": "예: Galen Erso // 사령관",
   "Insira os parâmetros da missão ou proposta de engenharia...": "임무 매개변수나 엔지니어링 제안을 입력하세요...",
-  "ENVIAR TRANSMISSÃO ESTELAR": "항성 전송 보내기",
+  "ENVIAR MENSAGEM": "메시지 보내기",
   "[ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]": "[ 초공간을 통해 전송 완료 ]",
   "TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS": "암호화 전송 // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - 모든 권리 보유",
   "SETOR 01": "섹터 01",
@@ -2709,6 +2730,9 @@ const dic_ko = {
   // ---- sistema solar (seção Projetos) ----
   "Fechar projeto": "프로젝트 닫기",
   "Sistema solar 3D: clique em um planeta para ver o projeto": "3D 태양계: 행성을 클릭해 프로젝트 보기",
+  // ---- elfo 3D (Sobre mim) ----
+  "Modelo 3D · GLB": "3D 모델 · GLB",
+  "Personagem modelado, com rigging e animação no Blender. Arraste para girar.": "Blender에서 모델링, 리깅, 애니메이션한 캐릭터. 드래그하여 회전하세요.",
 };
 
 /* ===== DICIONÁRIO — RUSSO (ru) ===== */
@@ -2871,7 +2895,7 @@ const dic_ru = {
   "> TRANSMISSÃO CODIFICADA // MENSAGEM:": "> ЗАКОДИРОВАННАЯ ПЕРЕДАЧА // СООБЩЕНИЕ:",
   "Ex: Galen Erso // Comandante": "Напр.: Galen Erso // Командир",
   "Insira os parâmetros da missão ou proposta de engenharia...": "Введите параметры миссии или инженерное предложение...",
-  "ENVIAR TRANSMISSÃO ESTELAR": "ОТПРАВИТЬ ЗВЁЗДНУЮ ПЕРЕДАЧУ",
+  "ENVIAR MENSAGEM": "ОТПРАВИТЬ СООБЩЕНИЕ",
   "[ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]": "[ ПЕРЕДАЧА УСПЕШНО ОТПРАВЛЕНА ЧЕРЕЗ ГИПЕРПРОСТРАНСТВО ]",
   "TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS": "ЗАШИФРОВАННАЯ ПЕРЕДАЧА // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - ВСЕ ПРАВА ЗАЩИЩЕНЫ",
   "SETOR 01": "СЕКТОР 01",
@@ -3028,6 +3052,9 @@ const dic_ru = {
   // ---- sistema solar (seção Projetos) ----
   "Fechar projeto": "Закрыть проект",
   "Sistema solar 3D: clique em um planeta para ver o projeto": "3D Солнечная система: нажмите на планету, чтобы увидеть проект",
+  // ---- elfo 3D (Sobre mim) ----
+  "Modelo 3D · GLB": "3D-модель · GLB",
+  "Personagem modelado, com rigging e animação no Blender. Arraste para girar.": "Персонаж смоделирован, оснащён ригом и анимирован в Blender. Перетащите, чтобы повернуть.",
 };
 
 /* ===== DICIONÁRIO — ÁRABE (ar) ===== */
@@ -3190,7 +3217,7 @@ const dic_ar = {
   "> TRANSMISSÃO CODIFICADA // MENSAGEM:": "> إرسال مشفّر // الرسالة:",
   "Ex: Galen Erso // Comandante": "مثال: Galen Erso // القائد",
   "Insira os parâmetros da missão ou proposta de engenharia...": "أدخل معايير المهمة أو المقترح الهندسي...",
-  "ENVIAR TRANSMISSÃO ESTELAR": "أرسل البث النجمي",
+  "ENVIAR MENSAGEM": "إرسال الرسالة",
   "[ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]": "[ تم الإرسال بنجاح عبر الفضاء الفائق ]",
   "TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS": "بث مشفّر // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - جميع الحقوق محفوظة",
   "SETOR 01": "القطاع 01",
@@ -3347,6 +3374,9 @@ const dic_ar = {
   // ---- sistema solar (seção Projetos) ----
   "Fechar projeto": "إغلاق المشروع",
   "Sistema solar 3D: clique em um planeta para ver o projeto": "نظام شمسي ثلاثي الأبعاد: انقر على كوكب لعرض المشروع",
+  // ---- elfo 3D (Sobre mim) ----
+  "Modelo 3D · GLB": "نموذج ثلاثي الأبعاد · GLB",
+  "Personagem modelado, com rigging e animação no Blender. Arraste para girar.": "شخصية مصممة مع هيكل عظمي وتحريك في Blender. اسحب للتدوير.",
 };
 
 /* ===== DICIONÁRIO — HINDI (hi) ===== */
@@ -3509,7 +3539,7 @@ const dic_hi = {
   "> TRANSMISSÃO CODIFICADA // MENSAGEM:": "> कूटबद्ध ट्रांसमिशन // संदेश:",
   "Ex: Galen Erso // Comandante": "उदा.: Galen Erso // कमांडर",
   "Insira os parâmetros da missão ou proposta de engenharia...": "मिशन के पैरामीटर या इंजीनियरिंग प्रस्ताव लिखें...",
-  "ENVIAR TRANSMISSÃO ESTELAR": "तारकीय ट्रांसमिशन भेजें",
+  "ENVIAR MENSAGEM": "संदेश भेजें",
   "[ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]": "[ हाइपरस्पेस से ट्रांसमिशन सफलतापूर्वक भेजा गया ]",
   "TRANSMISSÃO CRIPTOGRAFADA // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - TODOS OS DIREITOS RESERVADOS": "एन्क्रिप्टेड ट्रांसमिशन // SYSTEM ID: CD-9418 // © 2026 CARLOS DANIEL - सर्वाधिकार सुरक्षित",
   "SETOR 01": "सेक्टर 01",
@@ -3666,6 +3696,9 @@ const dic_hi = {
   // ---- sistema solar (seção Projetos) ----
   "Fechar projeto": "प्रोजेक्ट बंद करें",
   "Sistema solar 3D: clique em um planeta para ver o projeto": "3D सौर मंडल: प्रोजेक्ट देखने के लिए किसी ग्रह पर क्लिक करें",
+  // ---- elfo 3D (Sobre mim) ----
+  "Modelo 3D · GLB": "3D मॉडल · GLB",
+  "Personagem modelado, com rigging e animação no Blender. Arraste para girar.": "Blender में मॉडल, रिग और एनिमेट किया गया किरदार। घुमाने के लिए खींचें।",
 };
 
 /** Código do idioma → dicionário (o português é o texto original, por isso não tem dicionário). */

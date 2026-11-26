@@ -49,6 +49,27 @@
 .orbital-hud.no-3d .solar-stage { background: radial-gradient(circle at 50% 50%, rgba(255, 170, 0, .25) 0 3%, transparent 4%),
   repeating-radial-gradient(circle at 50% 50%, transparent 0 46px, rgba(31, 40, 81, .8) 46px 47px); }
 
+/* Holografia do projeto: presa no topo do planeta (o JS move o ponto 0,0 para lá), centralizada nele */
+.planet-holo { position: absolute; left: 0; top: 0; z-index: 5; width: 0; height: 0; pointer-events: none; will-change: transform; --planet: #19d4ff; }
+.planet-holo__body { position: absolute; left: 0; bottom: 0; width: 132px; transform: translateX(-50%) scale(.4); transform-origin: 50% 100%; opacity: 0;
+  display: flex; flex-direction: column; align-items: center; transition: opacity .35s ease, transform .45s cubic-bezier(.2, .9, .25, 1.15); }
+.planet-holo__body.is-on { opacity: 1; transform: translateX(-50%) scale(1); }
+.planet-holo__screen { position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 5px; background: #04101e;
+  border: 1px solid color-mix(in srgb, var(--planet) 80%, white 20%);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--planet) 55%, transparent), inset 0 0 10px color-mix(in srgb, var(--planet) 35%, transparent); }
+.planet-holo__screen img, .planet-holo__screen video { display: block; width: 100%; height: 100%; object-fit: cover; opacity: .92; }
+/* linhas de holograma por cima da imagem */
+.planet-holo__screen::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent 0 2px, color-mix(in srgb, var(--planet) 14%, transparent) 2px 3px),
+    linear-gradient(180deg, color-mix(in srgb, var(--planet) 18%, transparent), transparent 40%); }
+.planet-holo__name { margin-top: 4px; max-width: 100%; padding: 1px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius: 3px;
+  font: 600 9px/1.5 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; color: #e6f8ff; background: rgba(4, 16, 30, .8); }
+/* feixe de luz: estreito no planeta, largo na tela */
+.planet-holo__beam { width: 70%; height: 30px; clip-path: polygon(0 0, 100% 0, 58% 100%, 42% 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--planet) 45%, transparent), color-mix(in srgb, var(--planet) 85%, white 15%)); opacity: .55; }
+html.a11y-reduce-motion .planet-holo__body { transition: none; }
+@media (prefers-reduced-motion: reduce) { .planet-holo__body { transition: none; } }
+
 .solar-scanlines { position: absolute; inset: 48px 0 0; z-index: 10; pointer-events: none; opacity: .3;
   background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(25, 212, 255, .08) 3px 4px); }
 

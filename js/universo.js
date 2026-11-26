@@ -112,8 +112,10 @@ const universe = {
     maxHeightFraction: 0.34,      // altura máxima da nave em relação à altura da tela
     maxWidthFraction: 0.27,       // largura máxima da nave em relação à largura da tela
     minPx: 110,                   // abaixo disso (tela pequena demais) a nave fica de fora no Início
-    cruise: { x: 0.68, y: -0.62, z: -8 }, // durante as viagens: canto inferior direito, à frente da câmera (bico para dentro da tela)
-    away: { x: 0.25, y: 0.12, z: -180 },  // nas outras seções: segue em frente até sumir na distância
+    cruise: { x: 0.7, y: -0.6, z: -16 }, // durante as viagens/rolagem: canto inferior direito, um pouco ao longe (bico para dentro da tela)
+    // nas outras seções (página parada): patrulha o fundo numa volta lenta (elipse; x/y = centro na tela, rx/ry = raios em fração da tela,
+    // z = profundidade, rz = quanto a volta avança/recua em profundidade, speed = rad/s; negativo = sentido contrário)
+    patrol: { x: 0, y: 0.22, z: -45, rx: 0.72, ry: 0.05, rz: 16, speed: 0.12, phase: 0 },
     arriveSeconds: 2.0,           // duração da desaceleração ao chegar do hiperespaço
     // Orientação do modelo: para onde o "nariz" da nave aponta no arquivo GLB ('+z', '-z', '+x' ou '-x').
     noseAxis: '+z',
@@ -125,10 +127,9 @@ const universe = {
 
   secondaryShip: {
     enabled: true,
-    minDelaySeconds: 28,
-    maxDelaySeconds: 70,
-    passSeconds: 9,
     heightFraction: 0.07,
+    // volta contínua ao fundo (mesmo formato da patrulha da nave principal), no sentido contrário
+    patrol: { x: 0, y: -0.2, z: -70, rx: 0.85, ry: 0.07, rz: 24, speed: -0.09, phase: Math.PI },
     noseAxis: '+z',
   },
 
@@ -1725,6 +1726,17 @@ function normalize(scene) {
   return outer;
 }
 
+/** Ponto de uma volta de patrulha (elipse ao fundo, no espaço do rig) e o yaw do bico na direção do movimento
+ *  (convenção das naves: yaw 0 = bico para -x). */
+function patrolPose(u, p, time) {
+  const th = time * p.speed + (p.phase ?? 0), dir = Math.sign(p.speed) || 1;
+  const halfH = Math.tan(THREE.MathUtils.degToRad(u.camera.fov / 2)) * (u.rigDepth - p.z), halfW = halfH * u.camera.aspect;
+  const pos = new THREE.Vector3(p.x * halfW + Math.cos(th) * p.rx * halfW, p.y * halfH + Math.sin(th * 2) * p.ry * halfH, p.z + Math.sin(th) * p.rz);
+  const dx = -Math.sin(th) * p.rx * halfW * dir, dz = Math.cos(th) * p.rz * dir;
+  return { pos, yaw: Math.atan2(dz, -dx), halfH };
+}
+const wrapAngle = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+
 function makeStreak() {
   const geo = new THREE.PlaneGeometry(1, 1); geo.translate(0.5, 0, 0);
   const mat = new THREE.ShaderMaterial({
@@ -1818,8 +1830,7 @@ class MainShip {
       return this.u.ndcToWorld((this.homeSpot.x / window.innerWidth) * 2 - 1, -((this.homeSpot.y / window.innerHeight) * 2 - 1));
     }
     if (name === 'cruise') { const c = this.cfg.cruise; return this._at(c.x, c.y, c.z ?? -8); }
-    const a = this.cfg.away ?? { x: 0.25, y: 0.12, z: -180 };
-    return this._at(a.x, a.y, a.z);
+    return patrolPose(this.u, this.cfg.patrol, this.u.time ?? 0).pos; // 'away': ponto atual da patrulha
   }
 
   /** Ponto da tela (ndc) a uma profundidade z do rig. */
@@ -1871,12 +1882,15 @@ class MainShip {
     const fast = !this.u.reduced && (Math.abs(ctx.scrollVel) > 700 || ctx.traveling);
     const homeVisible = ctx.scrollY < H * 0.55;
     const mode = homeVisible && !fast ? 'home' : fast ? 'cruise' : 'away';
-    const target = this._pose(mode);
+    const patrol = mode === 'away' ? patrolPose(this.u, this.cfg.patrol, ctx.time) : null;
+    const target = patrol ? patrol.pos : this._pose(mode);
     const { halfH, halfW } = this.u.view();
 
-    // vinha de longe e a viagem começou: entra por TRÁS da câmera e a ultrapassa (sempre de bico para a frente)
+    // vinha de longe e a viagem começou: entra pela lateral direita, já na profundidade do voo
+    // (nunca por trás da câmera, para não passar gigante na frente da tela)
     if (mode === 'cruise' && this.state === 'away' && !this.holder.visible) {
-      this.holder.position.copy(this._at(0.9, -0.5, this.u.rigDepth + 6));
+      const c = this.cfg.cruise;
+      this.holder.position.copy(this._at(1.5, c.y, c.z ?? -8));
       this.yaw = this._yawFor('cruise');
     }
     if (mode === 'home') {
@@ -1885,13 +1899,15 @@ class MainShip {
       target.y += ctx.mouse.y * this.cfg.mouseInfluence * halfH;
     }
     if (this.u.reduced) this.holder.position.copy(target);
-    else this.holder.position.lerp(target, 1 - Math.exp(-dt * (mode === 'away' ? 1.1 : mode === 'cruise' ? 2.2 : 2.6)));
+    else this.holder.position.lerp(target, 1 - Math.exp(-dt * (mode === 'away' ? 1.1 : mode === 'cruise' ? 1.6 : 2.6)));
     this.state = mode;
 
     // bico na direção do movimento; inclinação lateral suave e limitada
-    const wantYaw = this._yawFor(mode) + (mode === 'home' ? ctx.mouse.x * 0.1 : 0);
-    this.yaw += (wantYaw - this.yaw) * (1 - Math.exp(-dt * (mode === 'home' ? 3 : 6)));
-    const wantBank = mode === 'cruise' ? clamp(ctx.scrollVel / 3000, -1, 1) * 0.22 : 0;
+    const wantYaw = patrol ? patrol.yaw : this._yawFor(mode) + (mode === 'home' ? ctx.mouse.x * 0.1 : 0);
+    const dYaw = wrapAngle(wantYaw - this.yaw);
+    this.yaw += dYaw * (1 - Math.exp(-dt * (mode === 'home' ? 3 : patrol ? 2 : 6)));
+    // inclina para dentro da curva na patrulha
+    const wantBank = mode === 'cruise' ? clamp(ctx.scrollVel / 3000, -1, 1) * 0.22 : patrol ? -0.25 * Math.sign(this.cfg.patrol.speed) : 0;
     this.bank += (wantBank - this.bank) * (1 - Math.exp(-dt * 4));
     this._orient(this.yaw, this.bank);
 
@@ -1906,7 +1922,7 @@ class MainShip {
   }
 }
 
-/** Nave secundária: passagens ocasionais e discretas ao fundo. */
+/** Nave secundária: dá voltas lentas e contínuas ao fundo. */
 class SecondaryShip {
   constructor(universe) {
     this.u = universe; this.cfg = U.secondaryShip;
@@ -1918,37 +1934,25 @@ class SecondaryShip {
   get visible() { return this.holder.visible; }
 
   async begin() {
-    if (!this.cfg.enabled || this.u.reduced) return;
+    if (!this.cfg.enabled || this.u.reduced || this.model) return;
     try {
       const gltf = await loadGLB(models.secondarySpaceship);
       this.model = normalize(gltf.scene); this.holder.add(this.model);
     } catch (err) { console.info('[universe] Nave secundária indisponível:', err.message); return; }
-    this.running = true; this._schedule();
+    this.running = true;
   }
 
-  _schedule() {
-    const { minDelaySeconds: a, maxDelaySeconds: b } = this.cfg;
-    this.timer = setTimeout(() => this._pass(), (a + Math.random() * (b - a)) * 1000);
+  /** Volta contínua e lenta ao fundo, com o bico na direção do movimento. */
+  update(dt, time) {
+    if (!this.running || this.u.intro?.active) { this.holder.visible = false; return; }
+    const p = patrolPose(this.u, this.cfg.patrol, time);
+    this.holder.scale.setScalar(this.cfg.heightFraction * p.halfH * 2);
+    this.holder.position.copy(p.pos);
+    this.model.rotation.set(0.1, (NOSE_YAW[this.cfg.noseAxis] ?? 0) + p.yaw, 0.2 * Math.sign(this.cfg.patrol.speed));
+    this.holder.visible = true;
   }
 
-  _pass() {
-    if (!this.running) return;
-    if (document.hidden || this.u.intro?.active) { this._schedule(); return; }
-    const ltr = Math.random() < 0.5, depth = -8 - Math.random() * 6, y = 0.35 + Math.random() * 0.5;
-    const camZ = this.u.rigDepth, halfH = Math.tan(THREE.MathUtils.degToRad(this.u.camera.fov / 2)) * (camZ - depth);
-    const halfW = halfH * this.u.camera.aspect;
-    this.holder.scale.setScalar(this.cfg.heightFraction * halfH * 2);
-    const yaw = (NOSE_YAW[this.cfg.noseAxis] ?? 0) + (ltr ? Math.PI : 0); // nariz na direção do movimento
-    this.model.rotation.set(0.1, yaw, 0);
-    const x0 = (ltr ? -1 : 1) * halfW * 1.3, x1 = -x0, y0 = y * halfH;
-    this.holder.position.set(x0, y0, depth); this.holder.visible = true;
-    const o = { t: 0 };
-    this.tween = gsap.to(o, { t: 1, duration: this.cfg.passSeconds, ease: 'none',
-      onUpdate: () => { this.holder.position.set(x0 + (x1 - x0) * o.t, y0 + Math.sin(o.t * Math.PI) * halfH * 0.12, depth); },
-      onComplete: () => { this.holder.visible = false; this._schedule(); } });
-  }
-
-  dispose() { this.running = false; clearTimeout(this.timer); this.tween?.kill(); }
+  dispose() { this.running = false; }
 }
 
 /* ===== 14. MODELOS PRESOS ÀS SEÇÕES (ELFO) ===== */
@@ -2118,8 +2122,8 @@ function initTravel({ seconds = 1.5, reduced = false, onChange } = {}) {
 /** Níveis de qualidade (o automático começa em "high" no desktop e "medium" no celular e desce se ficar lento). */
 const QUALITY = {
   // px = resolução máxima (× pixels da tela); bloom = escala da resolução do brilho (0 = desligado)
-  high: { px: 1.25, bloom: 0.4, stars: U.stars.high, clouds: 26, bgScale: 0.5, skySize: 2048 },
-  medium: { px: 1, bloom: 0.3, stars: U.stars.medium, clouds: 18, bgScale: 0.4, skySize: 2048 },
+  high: { px: 1.25, bloom: 1, stars: U.stars.high, clouds: 26, bgScale: 0.5, skySize: 2048 },
+  medium: { px: 1, bloom: 0.7, stars: U.stars.medium, clouds: 18, bgScale: 0.4, skySize: 2048 },
   low: { px: 1, bloom: 0, stars: U.stars.low, clouds: 10, bgScale: 0.33, skySize: 1024 },
 };
 const LEVELS = ['high', 'medium', 'low'];
@@ -2174,8 +2178,7 @@ class Universe {
     this.travel = initTravel({ seconds: U.travel.menuSeconds, reduced: this.reduced });
 
     this.anchored = [];
-    const elfAnchor = document.querySelector('[data-elf-anchor]');
-    if (elfAnchor) this.anchored.push(new AnchoredModel(this, { url: models.elfCharacter, anchor: elfAnchor, title: 'ELFO', animation: elfAnimation, height: 1, widthRatio: 1.5, maxPx: 400, yaw: -0.45, brightness: 0.55 }));
+    // o elfo (Sobre mim) tem cena própria: js/elfo.js
 
     this._buildComposer();
     this.reduceFx = !!prefs.get('reduceEffects');
@@ -2341,6 +2344,7 @@ class Universe {
 
     const ctx = { scrollY: y, scrollVel: this.scrollVel, traveling: this.travel.active || (d.state === 'travel' && d.speed > 40), mouse: this.mouse, time: this.time };
     this.main.update(dt, ctx);
+    this.secondary.update(dt, this.time);
     let anchoredVisible = false;
     for (const a of this.anchored) anchoredVisible = a.update(dt) || anchoredVisible;
     const homeVisible = 1 - THREE.MathUtils.smoothstep(y, H * 0.12, H * 0.62);

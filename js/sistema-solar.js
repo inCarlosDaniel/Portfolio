@@ -217,8 +217,20 @@ class SolarScene {
       }
       this._render();
     } else if (this._dirty) { this._dirty = false; this._render(); }
+    this.onFrame?.();
     this._raf = requestAnimationFrame(this._frame);
   };
+
+  /** Topo do planeta em pixels do palco (para prender a holografia exatamente em cima dele). */
+  screenTop(planetId) {
+    const p = this.planets.find((x) => x.userData.id === planetId);
+    if (!p) return null;
+    const r = p.geometry.parameters.radius;
+    const v = this._tmp2.copy(p.position); v.y += r * 1.15;
+    v.project(this.camera);
+    return { x: (v.x + 1) / 2 * this.container.clientWidth, y: (1 - v.y) / 2 * this.container.clientHeight, behind: v.z > 1 };
+  }
+  _tmp2 = new THREE.Vector3();
 
   /** shift = quanto deslocar a imagem ({x, y} em fração do palco) para fugir da gaveta. */
   focus(planetId, shift = { x: 0, y: 0 }) {
@@ -347,7 +359,7 @@ function mountOrbitalHud(hud) {
   const drawer = hud.querySelector('[data-solar-drawer]');
   const cards = [...hud.querySelectorAll('[data-planet]')];
   const overviewBtn = hud.querySelector('[data-hud-overview]');
-  let scene = null, current = null, lastCard = null, fromHistory = false;
+  let scene = null, holo = null, current = null, lastCard = null, fromHistory = false;
 
   // cor e nome de cada cartão vêm do cadastro (js/projetos.js)
   for (const c of cards) {
@@ -361,7 +373,10 @@ function mountOrbitalHud(hud) {
 
   function ensureScene() {
     if (scene) return scene;
-    try { scene = new SolarScene(stage, { onPick: select }); hud.classList.add('is-3d'); }
+    try {
+      scene = new SolarScene(stage, { onPick: select }); hud.classList.add('is-3d');
+      holo = mountPlanetHolo(stage, scene, { every: 4.5, first: 'mod-wicked', isPaused: () => !!current });
+    }
     catch (err) { console.error('[sistema-solar] WebGL indisponível; os cartões continuam funcionando.', err); hud.classList.add('no-3d'); }
     return scene;
   }
@@ -373,6 +388,7 @@ function mountOrbitalHud(hud) {
     setActive(id);
     renderDrawer(drawer, id);
     drawer.hidden = false;
+    holo?.hide();
     requestAnimationFrame(() => drawer.classList.add('is-open'));
     drawer.querySelector('[data-drawer-body]').scrollTop = 0;
     overviewBtn.hidden = false;
@@ -422,8 +438,91 @@ function mountOrbitalHud(hud) {
     fromHistory = true;
     try { if (planet) select(planet); else reset(); } finally { fromHistory = false; }
   });
-  window.addEventListener('pagehide', () => scene?.dispose());
+  window.addEventListener('pagehide', () => { holo?.dispose(); scene?.dispose(); });
   return { select, reset };
+}
+
+/* ===== 5. HOLOGRAFIA DOS PROJETOS ===== */
+
+/** Mídia de vitrine de um projeto: imagem > GIF > vídeo. */
+function previewMedia(project) {
+  const list = project?.media ?? [];
+  return list.find((m) => m.type === 'image') ?? list.find((m) => m.type === 'gif') ?? list[0] ?? null;
+}
+
+/** Uma telinha holográfica, centralizada em cima de UM planeta por vez, com a imagem do projeto.
+ *  Troca de planeta a cada `every` segundos; some enquanto um projeto está aberto.
+ *  A sequência sempre começa pelo projeto `first`. */
+function mountPlanetHolo(stage, scene, { every = 4.5, first = 'mod-wicked', isPaused }) {
+  const holo = el('div', 'planet-holo'); holo.setAttribute('aria-hidden', 'true');
+  const body = el('div', 'planet-holo__body');
+  const screen = el('div', 'planet-holo__screen');
+  const name = el('div', 'planet-holo__name');
+  body.append(screen, name, el('div', 'planet-holo__beam'));
+  holo.append(body);
+  stage.append(holo);
+
+  // ordem das órbitas, girada para começar pelo projeto `first`
+  let order = PLANETS.map((p) => p.id).filter((id) => previewMedia(projectFor(id)));
+  const start = order.findIndex((id) => planetProjects[id] === first);
+  if (start > 0) order = [...order.slice(start), ...order.slice(0, start)];
+  let i = 0, planet = null, swapTimer = 0;
+
+  const setMedia = (id) => {
+    const m = previewMedia(projectFor(id));
+    screen.querySelector('video')?.pause();
+    screen.replaceChildren();
+    if (isVideo(m)) {
+      const v = el('video'); v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'metadata';
+      v.src = m.src;
+      if (!reducedMotion()) v.play().catch(() => {});
+      screen.append(v);
+    } else {
+      const img = el('img'); img.alt = ''; img.decoding = 'async'; img.src = m.src;
+      screen.append(img);
+    }
+    name.textContent = projectFor(id)?.name ?? '';
+    holo.style.setProperty('--planet', PLANETS.find((p) => p.id === id)?.color ?? '#19d4ff');
+  };
+
+  const hide = () => { body.classList.remove('is-on'); };
+  const next = () => {
+    if (!order.length) return;
+    if (isPaused() || !scene.visible || document.hidden) { hide(); return; }
+    hide();
+    clearTimeout(swapTimer);
+    swapTimer = setTimeout(() => {
+      if (isPaused()) return;
+      planet = order[i++ % order.length];
+      setMedia(planet);
+      body.classList.add('is-on');
+    }, planet ? 350 : 0);
+  };
+
+  // acompanha o planeta na órbita a cada quadro
+  scene.onFrame = () => {
+    if (!planet) return;
+    if (isPaused()) { hide(); return; }
+    const p = scene.screenTop(planet);
+    if (!p || p.behind) { holo.style.visibility = 'hidden'; return; }
+    holo.style.visibility = '';
+    holo.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px)`;
+  };
+
+  // começa 2 s depois que a seção entra na tela; ao sair, para e recomeça do primeiro na próxima vez
+  let timer = 0, startTimer = 0;
+  const stop = () => { clearTimeout(startTimer); clearInterval(timer); clearTimeout(swapTimer); timer = startTimer = 0; };
+  const io = new IntersectionObserver(([e]) => {
+    stop();
+    if (e.isIntersecting) {
+      startTimer = setTimeout(() => {
+        next();
+        timer = setInterval(next, every * 1000);
+      }, 2000);
+    } else { hide(); planet = null; i = 0; }
+  }, { threshold: 0.3 });
+  io.observe(stage);
+  return { next, hide, dispose: () => { stop(); io.disconnect(); holo.remove(); } };
 }
 
 /* ===== O QUE OS OUTROS ARQUIVOS USAM DESTE ===== */

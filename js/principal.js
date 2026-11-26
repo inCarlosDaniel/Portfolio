@@ -134,7 +134,7 @@ function simulateTransmission() {
 
     setTimeout(() => {
       document.getElementById('contact-form').reset();
-      text.innerText = "ENVIAR TRANSMISSÃO ESTELAR";
+      text.innerText = "ENVIAR MENSAGEM";
       btn.classList.remove('opacity-75');
       feedback.classList.add('hidden');
     }, 5000);
@@ -476,7 +476,7 @@ let projects = {}, planetProjects = {};
 /** Liga o site em duas etapas: primeiro o que é leve (idiomas, menu, formulário); depois o 3D. */
 async function iniciar() {
   // o 3D começa a baixar já, em paralelo, mas não segura o resto da página
-  const pesado = Promise.all([import('./sistema-solar.js'), import('./universo.js')]);
+  const pesado = Promise.all([import('./sistema-solar.js'), import('./universo.js'), import('./elfo.js')]);
   const [idiomas, projetos] = await Promise.all([import('./idiomas.js'), import('./projetos.js')]);
   ({ LANGS, setLang, currentLang } = idiomas);
   ({ projects, planetProjects } = projetos);
@@ -487,8 +487,9 @@ async function iniciar() {
   initNavigation();       // menu, seção atual, progresso, voltar ao início
   initReveal();           // painéis se materializam ao chegar
 
-  const [sistemaSolar, universo3d] = await pesado;
+  const [sistemaSolar, universo3d, elfo] = await pesado;
   sistemaSolar.mountOrbitalHud(document.getElementById('orbital-hud')); // seção Projetos: sistema solar 3D
+  elfo.mountElf(document.getElementById('elf-stage'));                   // seção Sobre mim: elfo 3D
 
   // UM universo 3D para o site inteiro (fundo, Big Bang, título, naves, elfo
   let universe = null;

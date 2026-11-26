@@ -52,24 +52,19 @@ html.is-intro .rail, html.is-intro .pager, html.is-intro .to-top, html.is-intro 
   .hero-actions { width: 100%; }
 }
 
-/* Sobre mim: moldura holográfica do elfo 3D. */
-.elf-holo { position: relative; height: clamp(380px, 34vw, 480px); border-radius: 8px; overflow: hidden;
-  border: 1px solid rgba(0, 242, 254, .3); box-shadow: 0 0 22px -8px rgba(0, 242, 254, .45), inset 0 0 40px -18px rgba(0, 242, 254, .35); }
-.elf-holo__ring { position: absolute; left: 50%; top: 50%; border-radius: 50%; pointer-events: none; }
-.elf-holo__ring--outer { width: min(86%, 400px); aspect-ratio: 1; margin: calc(min(86%, 400px) / -2) 0 0 calc(min(86%, 400px) / -2); border: 1px dashed rgba(0, 242, 254, .3); }
-.elf-holo__ring--inner { width: min(68%, 316px); aspect-ratio: 1; margin: calc(min(68%, 316px) / -2) 0 0 calc(min(68%, 316px) / -2); border: 1px dotted rgba(170, 120, 255, .35); }
-/* brilho esverdeado do holograma (por cima do modelo, bem suave, em modo "screen") */
-.elf-holo__glow { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
-  background: radial-gradient(ellipse 30% 40% at 50% 50%, rgba(140, 255, 90, .04), transparent 70%); }
-/* Sobre mim (telas grandes): a moldura do elfo fica centralizada na altura do painel de Competências Técnicas */
-@media (min-width: 1024px) { .elf-holo, #sobre .id-card { align-self: center; } }
-/* plataforma de luz sob os pés */
-.elf-holo__base { position: absolute; left: 50%; bottom: 7%; width: 46%; height: 26px; transform: translateX(-50%); border-radius: 50%; pointer-events: none;
-  background: radial-gradient(ellipse at center, rgba(0, 242, 254, .45), rgba(0, 140, 255, .15) 55%, transparent 72%); box-shadow: 0 0 26px rgba(0, 242, 254, .35); }
-.elf-holo__stage { position: absolute; left: 0; right: 0; top: 13%; bottom: 7%; }
-.elf-holo__tag { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); padding: 3px 10px; white-space: nowrap;
-  font: 500 11px/1.4 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .12em; color: #00f2fe;
-  background: rgba(4, 14, 30, .85); border: 1px solid rgba(0, 242, 254, .7); border-radius: 3px; }
+/* Sobre mim: card do elfo 3D (cena própria em js/elfo.js, desenhada num canvas dentro do palco). */
+.elf-card { position: relative; display: flex; flex-direction: column; }
+.elf-card__stage { position: relative; height: clamp(320px, 28vw, 380px); cursor: grab; touch-action: pan-y; }
+.elf-card__stage:active { cursor: grabbing; }
+/* brilho suave no chão, sob a base holográfica */
+.elf-card__stage::before { content: ''; position: absolute; left: 50%; bottom: 12%; width: 70%; height: 16%; transform: translateX(-50%); border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(142, 162, 255, .35), transparent); filter: blur(6px); }
+.elf-card__stage canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+.elf-card__loading { position: absolute; inset: 0; display: grid; place-items: center; color: #6f7a94; font: 500 12px 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+.elf-card__info { padding: 18px 24px 22px; }
+.elf-card__label { margin: 0 0 6px; font: 500 11px/1.4 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase; }
+/* Sobre mim (telas grandes): o card do elfo e a ficha ficam centralizados na altura do painel ao lado */
+@media (min-width: 1024px) { .elf-card, #sobre .id-card { align-self: center; } }
 
 .staff-anchor { display: inline-block; width: 40px; height: 84px; margin: -32px 0; flex: none; }
 

@@ -686,24 +686,28 @@
             </div>
             <span class="text-label-sm font-label-sm text-on-surface-variant">TLS 1.3 ACTIVE</span>
           </div>
-          <form class="space-y-5" id="contact-form">
+          <form class="space-y-5" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="91db2632-7354-4df4-84d5-165ea02c6af2"/>
+            <input type="hidden" name="subject" value="Nova mensagem pelo Portfólio"/>
+            <input type="hidden" name="from_name" value="Portfólio - Carlos Daniel"/>
+            <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off"/>
             <div>
               <label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">
                 &gt; NOME DE IDENTIFICAÇÃO DO OPERADOR:
               </label>
-              <input class="w-full bg-surface-container-low border border-outline-variant/50 rounded px-4 py-3 text-on-surface font-label-md text-label-md focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" placeholder="Ex: Galen Erso // Comandante" required="" type="text"/>
+              <input class="w-full bg-surface-container-low border border-outline-variant/50 rounded px-4 py-3 text-on-surface font-label-md text-label-md focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" name="name" placeholder="Ex: Galen Erso // Comandante" required="" type="text"/>
             </div>
             <div>
               <label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">
                 &gt; FREQUÊNCIA DE RETORNO / E-MAIL:
               </label>
-              <input class="w-full bg-surface-container-low border border-outline-variant/50 rounded px-4 py-3 text-on-surface font-label-md text-label-md focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" placeholder="operador@alianca.galactic" required="" type="email"/>
+              <input class="w-full bg-surface-container-low border border-outline-variant/50 rounded px-4 py-3 text-on-surface font-label-md text-label-md focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" name="email" placeholder="operador@alianca.galactic" required="" type="email"/>
             </div>
             <div>
               <label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">
                 &gt; TRANSMISSÃO CODIFICADA // MENSAGEM:
               </label>
-              <textarea class="w-full bg-surface-container-low border border-outline-variant/50 rounded px-4 py-3 text-on-surface font-label-md text-label-md focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" placeholder="Insira os parâmetros da missão ou proposta de engenharia..." required="" rows="4"></textarea>
+              <textarea class="w-full bg-surface-container-low border border-outline-variant/50 rounded px-4 py-3 text-on-surface font-label-md text-label-md focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" name="message" placeholder="Insira os parâmetros da missão ou proposta de engenharia..." required="" rows="4"></textarea>
             </div>
             <button class="w-full inline-flex items-center justify-center space-x-3 px-8 py-4 rounded text-label-md font-label-md tracking-wider uppercase bg-primary-container text-on-primary hover:shadow-[0_0_25px_rgba(0,242,254,0.7)] active:scale-95 transition-all font-bold" id="submit-btn" type="submit">
               <span class="material-symbols-outlined text-lg">send</span>
@@ -711,6 +715,9 @@
             </button>
             <div class="hidden text-center p-3 rounded bg-primary-container/10 border border-primary-container/40 text-primary-container font-label-sm text-label-sm" id="form-feedback">
               [ TRANSMISSÃO TRANSMITIDA COM SUCESSO PELO HIPERESPAÇO ]
+            </div>
+            <div class="hidden text-center p-3 rounded border font-label-sm text-label-sm" style="color:#ff6b7a;background:rgba(255,107,122,.1);border-color:rgba(255,107,122,.4)" id="form-error" role="alert">
+              [ FALHA NA TRANSMISSÃO // TENTE NOVAMENTE OU USE O E-MAIL DIRETO ]
             </div>
           </form>
         </div>

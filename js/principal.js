@@ -118,33 +118,54 @@ const urlState = {
 
 /* ===== 3. FORMULÁRIO DE CONTATO ===== */
 
-// Formulário de contato (comportamento original preservado: simulação de envio).
-function simulateTransmission() {
+// Formulário de contato: envia de verdade pelo Web3Forms (a mensagem chega no e-mail).
+async function sendTransmission(form) {
   const btn = document.getElementById('submit-btn');
   const text = document.getElementById('btn-text');
   const feedback = document.getElementById('form-feedback');
+  const error = document.getElementById('form-error');
 
   text.innerText = "ENCRIPTANDO & TRANSMITINDO...";
+  btn.disabled = true;
   btn.classList.add('opacity-75', 'cursor-wait');
+  feedback.classList.add('hidden');
+  error.classList.add('hidden');
 
-  setTimeout(() => {
+  let ok = false;
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: new FormData(form),
+    });
+    const data = await res.json().catch(() => ({}));
+    ok = res.ok && data.success !== false;
+  } catch { ok = false; }
+
+  btn.classList.remove('cursor-wait');
+
+  if (ok) {
+    form.reset();
     feedback.classList.remove('hidden');
     text.innerText = "TRANSMISSÃO CONCLUÍDA";
-    btn.classList.remove('cursor-wait');
+  } else {
+    error.classList.remove('hidden');
+    text.innerText = "ENVIAR MENSAGEM";
+  }
 
-    setTimeout(() => {
-      document.getElementById('contact-form').reset();
-      text.innerText = "ENVIAR MENSAGEM";
-      btn.classList.remove('opacity-75');
-      feedback.classList.add('hidden');
-    }, 5000);
-  }, 1200);
+  setTimeout(() => {
+    text.innerText = "ENVIAR MENSAGEM";
+    btn.disabled = false;
+    btn.classList.remove('opacity-75');
+    feedback.classList.add('hidden');
+    error.classList.add('hidden');
+  }, ok ? 5000 : 7000);
 }
 
 function initContactForm() {
   const form = document.getElementById('contact-form');
   if (!form) return;
-  form.addEventListener('submit', (e) => { e.preventDefault(); simulateTransmission(); });
+  form.addEventListener('submit', (e) => { e.preventDefault(); sendTransmission(form); });
 }
 
 /* ===== 4. REVELAÇÃO DOS PAINÉIS ===== */
